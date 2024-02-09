@@ -1,31 +1,11 @@
-# IQoS xApp
-TODO: description
+# GT-IQOS
 
 ## Requirements
-TODO
+
+- Golang (1.21 or newer)
 
 ## Getting started
 
-TODO
+### Instalation
 
-
-## Installation
-TODO
-
-## Usage
-TODO
-
-## Contributing
-TODO
-
-## Authors and acknowledgment
-
-- Murilo Silva, Victor Dias, Matheus Gomes, João Batista, André Riker at Federal University of Pará (UFPA);
-- National Education and Research Network (RNP).
-
-## License
-TODO
-
-## Project status
-
-In development
+### Configuration
