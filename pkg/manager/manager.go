@@ -75,3 +75,9 @@ func (mgr *Manager) start() error {
 
 	return nil
 }
+
+// finalizes xApp processes
+func (m *Manager) Close() {
+	// TODO
+	// syscall.Kill(syscall.Getpid(), syscall.SIGINT)
+}
