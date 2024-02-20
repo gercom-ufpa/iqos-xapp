@@ -3,9 +3,10 @@
 ## Requirements
 
 - Golang (1.21 or newer)
+- SD-RAN RIC (uONOS);
 
 ## Getting started
 
-### Instalation
+### Installation
 
 ### Configuration

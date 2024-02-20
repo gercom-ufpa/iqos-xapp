@@ -1,6 +1,6 @@
 ARG XAPPNAME=iqos-xapp
 
-FROM golang:1.21.6 as build
+FROM golang:1.22.0 as build
 
 ARG XAPPNAME
 WORKDIR /usr/src/git.rnp.br/openran/fase-1/gts/gt-iqos/${XAPPNAME}
