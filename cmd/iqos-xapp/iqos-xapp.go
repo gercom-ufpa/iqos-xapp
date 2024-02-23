@@ -39,7 +39,7 @@ func main() {
 	// creates the xApp manager
 	mgr := manager.NewManager(cfg)
 
-	// starts APP manager
+	// run APP manager
 	mgr.Run()
 
 	// configures a shutdown signal for xApp
