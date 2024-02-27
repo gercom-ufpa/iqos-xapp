@@ -16,6 +16,8 @@ spec:
       app.kubernetes.io/instance: {{ .Release.Name }}
   template:
     metadata:
+      annotations:
+        proxy.onosproject.org/inject: "true"
       labels:
         app.kubernetes.io/name: {{ include "iqos-chart.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
