@@ -22,7 +22,7 @@ func main() {
 	// set manager configuration
 	cfg := manager.Config{
 		AppID:        "iqos-xapp",
-		CAPath:       "/etc/iqos-xapp/certs/tls.cacrt",
+		CAPath:       "/etc/iqos-xapp/certs/ca.pem",
 		KeyPath:      "/etc/iqos-xapp/certs/tls.key",
 		CertPath:     "/etc/iqos-xapp/certs/tls.crt",
 		E2tEndpoint:  "onos-e2t",

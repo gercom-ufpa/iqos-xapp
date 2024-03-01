@@ -23,6 +23,15 @@ service:
       enabled: false
       port: 31701
 
+config:
+  iqos-xapp:
+    # e2tEndpoint: "onos-e2t:5150" (TODO)
+    # kpmVersion: "v2"
+    configJson:
+      reportPeriod:
+        interval: 1000 # 1000 ms ??
+        granularity: 1000 # 1000 ms ??
+      slices: # (TODO)
 
 resources: {}
 
@@ -41,3 +50,15 @@ ingress:
 autoscaling:
   enabled: false
   minReplicas: 1
+
+logging:
+  loggers:
+    root:
+      level: info
+      output:
+        stdout:
+          sink: stdout
+  sinks:
+    stdout:
+      type: stdout
+      stdout: {}
