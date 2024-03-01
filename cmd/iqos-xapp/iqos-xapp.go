@@ -21,15 +21,15 @@ func main() {
 
 	// set manager configuration
 	cfg := manager.Config{
-		AppID:        "qmai",
-		CAPath:       "/etc/qmai/certs/tls.cacrt",
-		KeyPath:      "/etc/qmai/certs/tls.key",
-		CertPath:     "/etc/qmai/certs/tls.crt",
+		AppID:        "iqos-xapp",
+		CAPath:       "/etc/iqos-xapp/certs/tls.cacrt",
+		KeyPath:      "/etc/iqos-xapp/certs/tls.key",
+		CertPath:     "/etc/iqos-xapp/certs/tls.crt",
 		E2tEndpoint:  "onos-e2t",
 		E2tPort:      5150,
 		TopoEndpoint: "onos-topo",
 		TopoPort:     5150,
-		ConfigPath:   "/etc/qmai/config/config.json",
+		ConfigPath:   "/etc/iqos-xapp/config/config.json",
 		KpmSM: manager.KpmSM{
 			Name:    "oran-e2sm-kpm",
 			Version: "v2",
