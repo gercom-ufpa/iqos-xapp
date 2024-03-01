@@ -141,10 +141,10 @@ func (m *Manager) updateUEAspects(ctx context.Context, ue uenib.UE) {
 	log.Debug("Updating UE aspects")
 
 	// uncomment me to set aspect to existing UE
-	// ue.SetAspect(&uenib.CellInfo{ServingCell: &uenib.CellConnection{
-	// 	ID:             "e2:4/e00/2/64/e0000",
-	// 	SignalStrength: 11.0,
-	// }})
+	ue.SetAspect(&uenib.CellInfo{ServingCell: &uenib.CellConnection{
+		ID:             "e2:4/e00/2/64/e0000",
+		SignalStrength: 11.0,
+	}})
 
 	_, err := m.ueClient.UpdateUE(ctx, &uenib.UpdateUERequest{
 		UE: ue,
