@@ -19,3 +19,4 @@ docker-build:
         docker push "$CI_REGISTRY_IMAGE:latest"
       fi
   # Run this job in a branch where a Dockerfile exists
+  
