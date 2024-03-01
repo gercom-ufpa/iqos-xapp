@@ -1,4 +1,4 @@
-# GT-IQOS
+# IQoS-XAPP
 
 ## Requirements
 

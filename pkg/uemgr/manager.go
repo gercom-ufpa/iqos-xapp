@@ -13,7 +13,7 @@ import (
 	"google.golang.org/grpc/credentials"
 )
 
-var log = logging.GetLogger("qmai", "uemgr")
+var log = logging.GetLogger("iqos-xapp", "uemgr")
 
 // creates a new UE Manager
 func NewManager(config Config) (Manager, error) {

@@ -1,8 +1,8 @@
 package manager
 
 import (
-	appConfig "git.rnp.br/openran/fase-1/gts/gt-iqos/pkg/config"
-	"git.rnp.br/openran/fase-1/gts/gt-iqos/pkg/southbound/e2"
+	appConfig "github.com/gercom-ufpa/iqos-xapp/pkg/config"
+	"github.com/gercom-ufpa/iqos-xapp/pkg/southbound/e2"
 )
 
 // manager configuration

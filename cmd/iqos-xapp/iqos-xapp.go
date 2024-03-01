@@ -5,7 +5,7 @@ import (
 	"os/signal"
 	"syscall"
 
-	"git.rnp.br/openran/fase-1/gts/gt-iqos/pkg/manager"
+	"github.com/gercom-ufpa/iqos-xapp/pkg/manager"
 	"github.com/onosproject/onos-lib-go/pkg/logging"
 )
 

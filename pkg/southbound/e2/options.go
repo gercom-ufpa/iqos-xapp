@@ -1,7 +1,7 @@
 package e2
 
 import (
-	appConfig "git.rnp.br/openran/fase-1/gts/gt-iqos/pkg/config"
+	appConfig "github.com/gercom-ufpa/iqos-xapp/pkg/config"
 )
 
 // e2 config
