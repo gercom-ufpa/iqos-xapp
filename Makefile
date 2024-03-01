@@ -16,13 +16,13 @@ docker-build: ## Build the iqos-xapp docker image
 docker-push: docker-build ## Push image to Docker Hub
 	@docker image push ${IQOS_DOCKER_REPO}:${IQOS_VERSION}
 
-helm-install:
+helm-install: ## Install iqos-xapp on Kubernetes
 	@helm upgrade --install -n riab iqos-xapp ./deploy/helm-chart/iqos-chart
 
-helm-uninstall:
+helm-uninstall: ## Uninstall iqos-xapp on Kubernetes
 	@helm uninstall -n riab iqos-xapp
 
-k8s-logs:
+k8s-logs: ## Gets logs from iqos-xapp pod
 	@kubectl logs -n riab $$(kubectl get pods -n riab --no-headers -o custom-columns=":metadata.name" | grep iqos-xapp) iqos-xapp -f
 
 clean: ## Remove all the build artifacts
