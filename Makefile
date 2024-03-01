@@ -16,5 +16,11 @@ docker-build: ## Build the iqos-xapp docker image
 docker-push: docker-build ## Push image to Docker Hub
 	@docker image push ${IQOS_DOCKER_REPO}:${IQOS_VERSION}
 
+helm-install:
+	@helm upgrade --install -n riab iqos-xapp ./deploy/helm-chart/iqos-chart
+
+helm-uninstall:
+	@helm uninstall -n riab iqos-xapp
+
 clean: ## Remove all the build artifacts
 	rm -rf ./build/_output
