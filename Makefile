@@ -17,7 +17,7 @@ docker-push: docker-build ## Push image to Docker Hub
 	@docker image push ${IQOS_DOCKER_REPO}:${IQOS_VERSION}
 
 helm-install: ## Install iqos-xapp on Kubernetes
-	@helm upgrade --install -n riab iqos-xapp ./deploy/helm-chart/iqos-chart
+	@helm upgrade --install -n riab iqos-xapp ./deploys/helm-chart/iqos-chart
 
 helm-uninstall: ## Uninstall iqos-xapp on Kubernetes
 	@helm uninstall -n riab iqos-xapp
