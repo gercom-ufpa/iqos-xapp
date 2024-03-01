@@ -7,6 +7,11 @@ metadata:
     helm.sh/chart: {{ include "iqos-chart.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
+  annotations:
+      keel.sh/policy: all     # update policy (available: patch, minor, major, all, force)
+      keel.sh/trigger: poll     # enable active repository checking (webhooks and GCR would still work)
+      keel.sh/pollSchedule: "@every 5s"
+
 spec:
   serviceName: "{{ include "iqos-chart.fullname" . }}-headless"
   replicas: {{ .Values.replicaCount }}
