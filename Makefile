@@ -11,7 +11,7 @@ build-app: ## Build the Go binary of the iqos-xapp
 	@go build -v -o build/_output/${XAPP_NAME} ./cmd/${XAPP_NAME}
 
 docker-build: ## Build the iqos-xapp docker image
-	docker image build -t ${IQOS_DOCKER_REPO}:${IQOS_VERSION} -f build/Dockerfile .
+	docker image build -t ${IQOS_DOCKER_REPO}:${IQOS_VERSION} .
 
 docker-push: docker-build ## Push image to Docker Hub
 	@docker image push ${IQOS_DOCKER_REPO}:${IQOS_VERSION}

@@ -3,7 +3,7 @@ ARG XAPPNAME=iqos-xapp
 FROM golang:1.22.0 as build
 
 ARG XAPPNAME
-WORKDIR /usr/src/github.com/gercom-ufpa/qmai/
+WORKDIR /usr/src/github.com/gercom-ufpa/${XAPPNAME}/
 COPY go.mod go.sum ./
 RUN go mod download && go mod verify
 COPY . .
@@ -15,4 +15,4 @@ ARG XAPPNAME
 RUN apk add libc6-compat
 USER nobody
 COPY --from=build /usr/src/github.com/gercom-ufpa/${XAPPNAME}/build/_output/${XAPPNAME} /usr/local/bin/${XAPPNAME}
-ENTRYPOINT ["qmai"]
+ENTRYPOINT ["iqos-xapp"]
