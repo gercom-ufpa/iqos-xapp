@@ -22,6 +22,11 @@ helm-install: ## Install iqos-xapp on Kubernetes
 helm-uninstall: ## Uninstall iqos-xapp on Kubernetes
 	@helm uninstall -n riab iqos-xapp
 
+helm-install-keel: ## Install keel.sh (temporary for xapp development)
+	@helm repo add keel https://charts.keel.sh
+	helm repo update
+	helm upgrade --install keel --namespace=kube-system keel/keel
+
 k8s-logs: ## Gets logs from iqos-xapp pod
 	@kubectl logs -n riab $$(kubectl get pods -n riab --no-headers -o custom-columns=":metadata.name" | grep iqos-xapp) iqos-xapp -f
 
