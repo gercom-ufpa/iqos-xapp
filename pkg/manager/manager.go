@@ -1,9 +1,11 @@
 package manager
 
 import (
+	"context"
+
 	appConfig "github.com/gercom-ufpa/iqos-xapp/pkg/config"
 	"github.com/gercom-ufpa/iqos-xapp/pkg/southbound/e2"
-	"github.com/gercom-ufpa/iqos-xapp/pkg/uemgr"
+	ueclient "github.com/gercom-ufpa/iqos-xapp/pkg/ueclient"
 	"github.com/onosproject/onos-lib-go/pkg/logging"
 )
 
@@ -18,20 +20,22 @@ func NewManager(config Config) *Manager {
 		log.Warn(err)
 	}
 
-	// Creates App Managers
-	// UE-NIB Manager
-	uemgrConfig := uemgr.Config{
+	// Creates App Clients
+	// UE-NIB Client
+	ueClientConfig := ueclient.Config{
 		UeNibEndpoint: config.UeNibEndpoint,
 		UeNibPort:     config.UeNibPort,
+		CertPath:      config.CertPath,
+		KeyPath:       config.KeyPath,
 	}
-	ueManager, err := uemgr.NewManager(uemgrConfig)
+	ueClient, err := ueclient.NewClient(context.Background(), ueClientConfig)
 	if err != nil {
 		log.Warn(err)
 	}
 
 	// R-NIB Manager (TODO)
 
-	// A1 Manager (TODO)
+	// A1 Manager (or client?? - TODO)
 
 	// E2 manager
 	e2config := e2.Config{
@@ -56,7 +60,7 @@ func NewManager(config Config) *Manager {
 		appConfig: appCfg,
 		config:    config,
 		E2Manager: e2Manager,
-		UeManager: ueManager,
+		UeClient:  ueClient,
 	}
 
 	return manager
@@ -77,13 +81,6 @@ func (mgr *Manager) start() error {
 		log.Warnf("Fail to start E2 Manager: %v", err)
 		return err
 	}
-
-	// starts UEManager Module (TODO)
-	// err := mgr.UEManager.Start();
-	// if err != nil {
-	// 	log.Warnf("Fail to start UEManager: %v", err)
-	// 	return err
-	// }
 
 	// starts Slice Module (TODO)
 

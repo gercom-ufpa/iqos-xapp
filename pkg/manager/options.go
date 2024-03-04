@@ -3,7 +3,7 @@ package manager
 import (
 	appConfig "github.com/gercom-ufpa/iqos-xapp/pkg/config"
 	"github.com/gercom-ufpa/iqos-xapp/pkg/southbound/e2"
-	"github.com/gercom-ufpa/iqos-xapp/pkg/uemgr"
+	ueclient "github.com/gercom-ufpa/iqos-xapp/pkg/ueclient"
 )
 
 // manager configuration
@@ -30,5 +30,5 @@ type Manager struct {
 	appConfig appConfig.Config
 	config    Config
 	E2Manager e2.Manager
-	UeManager uemgr.Manager
+	UeClient  ueclient.Client
 }
