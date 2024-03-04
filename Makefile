@@ -22,7 +22,7 @@ helm-install: ## Install iqos-xapp on Kubernetes
 helm-uninstall: ## Uninstall iqos-xapp on Kubernetes
 	@helm uninstall -n riab iqos-xapp
 
-helm-install-keel: ## Install keel.sh (temporary for xapp development)
+keel-install: ## Install keel.sh (temporary for xapp development)
 	@helm repo add keel https://charts.keel.sh
 	helm repo update
 	helm upgrade --install keel --namespace=kube-system keel/keel
