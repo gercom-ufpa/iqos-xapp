@@ -3,6 +3,7 @@ package manager
 import (
 	appConfig "github.com/gercom-ufpa/iqos-xapp/pkg/config"
 	"github.com/gercom-ufpa/iqos-xapp/pkg/southbound/e2"
+	"github.com/gercom-ufpa/iqos-xapp/pkg/uemgr"
 	"github.com/onosproject/onos-lib-go/pkg/logging"
 )
 
@@ -17,22 +18,34 @@ func NewManager(config Config) *Manager {
 		log.Warn(err)
 	}
 
-	// creates an e2Config
-	e2config := e2.Config{
-		AppID:       config.AppID,
-		AppConfig:   appCfg,
-		E2tAddress:  config.E2tEndpoint,
-		E2tPort:     config.E2tPort,
-		TopoAddress: config.TopoEndpoint,
-		TopoPort:    config.TopoPort,
-		KpmSM: e2.KpmSM{
-			Name:    config.KpmSM.Name,
-			Version: config.KpmSM.Version,
-		},
+	// Creates App Managers
+	// UE-NIB Manager
+	uemgrConfig := uemgr.Config{
+		UeNibEndpoint: config.UeNibEndpoint,
+		UeNibPort:     config.UeNibPort,
+	}
+	ueManager, err := uemgr.NewManager(uemgrConfig)
+	if err != nil {
+		log.Warn(err)
 	}
 
-	// creates managers
+	// R-NIB Manager (TODO)
+
+	// A1 Manager (TODO)
+
 	// E2 manager
+	e2config := e2.Config{
+		AppID:        config.AppID,
+		AppConfig:    appCfg,
+		E2tAddress:   config.E2tEndpoint,
+		E2tPort:      config.E2tPort,
+		TopoAddress:  config.TopoEndpoint,
+		TopoPort:     config.TopoPort,
+		KpmSMName:    config.KpmSMName,
+		KpmSMVersion: config.KpmSMVersion,
+		RsmSMName:    config.RsmSMName,
+		RsmSMVersion: config.RsmSMVersion,
+	}
 	e2Manager, err := e2.NewManager(e2config)
 	if err != nil {
 		log.Warn(err)
@@ -43,6 +56,7 @@ func NewManager(config Config) *Manager {
 		appConfig: appCfg,
 		config:    config,
 		E2Manager: e2Manager,
+		UeManager: ueManager,
 	}
 
 	return manager

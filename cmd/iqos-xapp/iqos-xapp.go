@@ -21,19 +21,21 @@ func main() {
 
 	// set manager configuration
 	cfg := manager.Config{
-		AppID:        "iqos-xapp",
-		CAPath:       "/etc/iqos-xapp/certs/ca.pem",
-		KeyPath:      "/etc/iqos-xapp/certs/tls.key",
-		CertPath:     "/etc/iqos-xapp/certs/tls.crt",
-		E2tEndpoint:  "onos-e2t",
-		E2tPort:      5150,
-		TopoEndpoint: "onos-topo",
-		TopoPort:     5150,
-		ConfigPath:   "/etc/iqos-xapp/config/config.json",
-		KpmSM: manager.KpmSM{
-			Name:    "oran-e2sm-kpm",
-			Version: "v2",
-		},
+		AppID:         "iqos-xapp",
+		CAPath:        "/etc/iqos-xapp/certs/tls.cacert",
+		KeyPath:       "/etc/iqos-xapp/certs/tls.key",
+		CertPath:      "/etc/iqos-xapp/certs/tls.crt",
+		ConfigPath:    "/etc/iqos-xapp/config/config.json",
+		E2tEndpoint:   "onos-e2t",
+		E2tPort:       5150,
+		TopoEndpoint:  "onos-topo",
+		TopoPort:      5150,
+		UeNibEndpoint: "onos-uenib",
+		UeNibPort:     5150,
+		KpmSMName:     "oran-e2sm-kpm",
+		KpmSMVersion:  "v2",
+		RsmSMName:     "oran-e2sm-rsm",
+		RsmSMVersion:  "v1",
 	}
 
 	// creates the xApp manager
