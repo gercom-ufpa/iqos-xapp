@@ -100,7 +100,7 @@ func (c *Client) HasRsmUE(ctx context.Context, rsmUeAspect *uenib.RsmUeInfo) boo
 		if item.GetGlobalUeID() == rsmUeAspect.GetGlobalUeID() &&
 			item.GetUeIdList().GetDuUeF1apID().Value == rsmUeAspect.GetUeIdList().GetDuUeF1apID().Value &&
 			item.GetUeIdList().GetCuUeF1apID().Value == rsmUeAspect.GetUeIdList().GetCuUeF1apID().Value &&
-			item.GetUeIdList().GetRANUeNgapID().Value == rsmUeAspect.GetUeIdList().GetRANUeNgapID().Value &&
+			item.GetUeIdList().GetRANUeNgapID().Value == rsmUeAspect.GetUeIdList().GetRANUeNgapID().Value && // for 5G ?
 			item.GetUeIdList().GetEnbUeS1apID().Value == rsmUeAspect.GetUeIdList().GetEnbUeS1apID().Value && // for 4G
 			item.GetUeIdList().GetAMFUeNgapID().Value == rsmUeAspect.GetUeIdList().GetAMFUeNgapID().Value && // for 5G
 			item.GetUeIdList().GetPreferredIDType().String() == rsmUeAspect.GetUeIdList().GetPreferredIDType().String() &&
@@ -114,7 +114,7 @@ func (c *Client) HasRsmUE(ctx context.Context, rsmUeAspect *uenib.RsmUeInfo) boo
 	return false
 }
 
-// Adds an RSM UE with RsmUEInfo aspect
+// Adds an UE with RsmUEInfo aspect
 func (c *Client) AddRsmUE(ctx context.Context, rsmUeAspect *uenib.RsmUeInfo) error {
 	log.Debugf("received ue: %v", rsmUeAspect)
 

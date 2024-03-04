@@ -33,7 +33,9 @@ func NewManager(config Config) *Manager {
 		log.Warn(err)
 	}
 
-	// R-NIB Manager (TODO)
+	// R-NIB Client (TODO)
+
+	// Creates App Managers
 
 	// A1 Manager (or client?? - TODO)
 
