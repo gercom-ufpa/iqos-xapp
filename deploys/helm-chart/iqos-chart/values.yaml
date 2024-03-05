@@ -5,7 +5,7 @@ replicaCount: 1
 image:
   repository: muriloavlis/iqos-xapp
   pullPolicy: IfNotPresent
-  tag: "v1.0.0-dev"
+  tag: "dev"
 
 imagePullSecrets: []
 nameOverride: ""
