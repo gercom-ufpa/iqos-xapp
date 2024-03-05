@@ -35,7 +35,7 @@ resources: {}
   # requests:
   #   cpu: 100m
   #   memory: 128Mi
-  
+
 nodeSelector: {}
 
 tolerations: []
@@ -43,14 +43,7 @@ tolerations: []
 affinity: {}
 
 serviceAccount:
-  create: true 
-
-ingress:
-  enabled: true
-
-autoscaling:
-  enabled: false
-  minReplicas: 1
+  create: false
 
 logging:
   loggers:

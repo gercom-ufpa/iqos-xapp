@@ -8,9 +8,9 @@ spec:
   type: ClusterIP
   ports:
     - name: grpc
-      port: {{ .Values.service.grpc.port}}
+      port: {{ .Values.service.grpc.port }}
     - name: gnmi
-      port: {{.Values.service.gnmi.port}}
+      port: {{ .Values.service.gnmi.port }}
 
   selector:
     name: {{ template "iqos-chart.fullname" . }}
