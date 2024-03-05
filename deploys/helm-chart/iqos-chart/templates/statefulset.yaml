@@ -3,10 +3,7 @@ kind: StatefulSet
 metadata:
   name: {{ include "iqos-chart.fullname" . }}
   labels:
-    app.kubernetes.io/name: {{ include "iqos-chart.name" . }}
-    helm.sh/chart: {{ include "iqos-chart.chart" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    {{- include "iqos-chart.labels" . | nindent 4 }}
   annotations:
       keel.sh/policy: all     # update policy (available: patch, minor, major, all, force)
       keel.sh/trigger: poll     # enable active repository checking (webhooks and GCR would still work)

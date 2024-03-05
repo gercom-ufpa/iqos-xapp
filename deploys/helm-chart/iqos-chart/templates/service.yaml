@@ -7,9 +7,12 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-    - port: {{ .Values.service.port }}
-      targetPort: {{ .Values.service.port }}
-      protocol: TCP
-      name: http
+    - name: grpc
+      port: {{ .Values.service.grpc.port}}
+    - name: gnmi
+      port: {{.Values.service.gnmi.port}}
+
   selector:
+    name: {{ template "iqos-chart.fullname" . }}
+    resource: {{ template "iqos-chart.fullname" . }}
     {{- include "iqos-chart.selectorLabels" . | nindent 4 }}
