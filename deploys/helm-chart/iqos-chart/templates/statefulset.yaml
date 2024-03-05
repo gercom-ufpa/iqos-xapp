@@ -37,7 +37,7 @@ spec:
         mountPath: /etc/iqos-xapp/certs
         readOnly: true
         - name: config
-        mounthPath: /etc/iqos-xapp/config
+        mountPath: /etc/iqos-xapp/config
         readOnly: true
       volumes: 
       - name: secret
