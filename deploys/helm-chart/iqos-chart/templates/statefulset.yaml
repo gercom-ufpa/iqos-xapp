@@ -44,5 +44,5 @@ spec:
         secret:
           secretName: {{ template "iqos-chart.fullname" . }}-secret
       - name: config
-        sconfigMap:
+        configMap:
           name: {{ template "iqos-chart.fullname" . }}-config    
