@@ -12,16 +12,10 @@ nameOverride: ""
 fullnameOverride: ""
 
 service:
-  port: 80
   grpc:
     port: 5150
   gnmi:
     port: 9339
-  exporter:
-    port: 7001
-    nodePort:
-      enabled: false
-      port: 31701
 
 config:
   onos:
@@ -35,7 +29,13 @@ config:
       slices: # (TODO)
 
 resources: {}
-
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+  
 nodeSelector: {}
 
 tolerations: []

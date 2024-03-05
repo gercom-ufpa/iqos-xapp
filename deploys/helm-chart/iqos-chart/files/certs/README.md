@@ -5,10 +5,10 @@ This folder contains self-signed certificates for use in testing. _DO NOT USE TH
 CERTIFICATES IN PRODUCTION!_
 
 The certificates were generated based on the script 
-[generate_certs.sh](/deployments/helm-chart/qmai/files/certs/generate_certs.sh), as shown below:
+[generate_certs.sh](/deployments/helm-chart/iqos-chart/files/certs/generate_certs.sh), as shown below:
 
 ```bash
-generate-certs.sh qmai.gercom.ufpa.br
+generate-certs.sh iqos-xapp.gercom.ufpa.br
 ```
 
 In this folder they **must** be (re)named
