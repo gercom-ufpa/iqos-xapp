@@ -1,0 +1,17 @@
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "iqos-chart.fullname" . }}-config
+  labels:
+    app: {{ template "iqos-chart.fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+data:
+  logging.yaml: |-
+{{- if .Values.logging }}
+{{ toYaml .Values.logging | indent 4 }}
+{{- end}}
+  config.json: |-
+{{ .Values.config.iqos.configJson | toPrettyJson | indent 4 }}

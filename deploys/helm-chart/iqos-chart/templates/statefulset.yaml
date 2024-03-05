@@ -32,3 +32,17 @@ spec:
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         ports:
         - containerPort: {{ .Values.service.port }}
+        volumeMounts:
+        - name: secret
+        mountPath: /etc/iqos-xapp/certs
+        readOnly: true
+        - name: config
+        mounthPath: /etc/iqos-xapp/config
+        readOnly: true
+      volumes: 
+      - name: secret
+        secret:
+          secretName: {{ template "iqos-chart.fullname" . }}-secret
+      - name: config
+        sconfigMap:
+          name: {{ template "iqos-chart.fullname" . }}-config    

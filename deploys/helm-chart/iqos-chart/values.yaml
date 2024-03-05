@@ -24,6 +24,8 @@ service:
       port: 31701
 
 config:
+  #servicePath: "/etc/iqos-xapp/config"
+  #configPath: "/etc/iqos-xapp/config"
   iqos-xapp:
     # e2tEndpoint: "onos-e2t:5150" (TODO)
     # kpmVersion: "v2"
