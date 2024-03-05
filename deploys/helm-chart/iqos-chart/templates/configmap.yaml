@@ -14,4 +14,4 @@ data:
 {{ toYaml .Values.logging | indent 4 }}
 {{- end}}
   config.json: |-
-{{ .Values.config["iqos-xapp"].configJson | toPrettyJson | indent 4 }}
+{{ .Values.config.iqosXapp.configJson | toPrettyJson | indent 4 }}
