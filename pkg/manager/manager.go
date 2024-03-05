@@ -4,8 +4,8 @@ import (
 	"context"
 
 	appConfig "github.com/gercom-ufpa/iqos-xapp/pkg/config"
+	"github.com/gercom-ufpa/iqos-xapp/pkg/nib/uenib"
 	"github.com/gercom-ufpa/iqos-xapp/pkg/southbound/e2"
-	ueclient "github.com/gercom-ufpa/iqos-xapp/pkg/ueclient"
 	"github.com/onosproject/onos-lib-go/pkg/logging"
 )
 
@@ -22,13 +22,13 @@ func NewManager(config Config) *Manager {
 
 	// Creates App Clients
 	// UE-NIB Client
-	ueClientConfig := ueclient.Config{
+	uenibConfig := uenib.Config{
 		UeNibEndpoint: config.UeNibEndpoint,
 		UeNibPort:     config.UeNibPort,
 		CertPath:      config.CertPath,
 		KeyPath:       config.KeyPath,
 	}
-	ueClient, err := ueclient.NewClient(context.Background(), ueClientConfig)
+	uenibClient, err := uenib.NewClient(context.Background(), uenibConfig)
 	if err != nil {
 		log.Warn(err)
 	}
@@ -59,10 +59,10 @@ func NewManager(config Config) *Manager {
 
 	// App Manager
 	manager := &Manager{
-		appConfig: appCfg,
-		config:    config,
-		E2Manager: e2Manager,
-		UeClient:  ueClient,
+		appConfig:   appCfg,
+		config:      config,
+		E2Manager:   e2Manager,
+		UenibClient: uenibClient,
 	}
 
 	return manager

@@ -2,8 +2,8 @@ package manager
 
 import (
 	appConfig "github.com/gercom-ufpa/iqos-xapp/pkg/config"
+	"github.com/gercom-ufpa/iqos-xapp/pkg/nib/uenib"
 	"github.com/gercom-ufpa/iqos-xapp/pkg/southbound/e2"
-	ueclient "github.com/gercom-ufpa/iqos-xapp/pkg/ueclient"
 )
 
 // manager configuration
@@ -27,8 +27,8 @@ type Config struct {
 
 // Manager is an abstract struct for manager
 type Manager struct {
-	appConfig appConfig.Config
-	config    Config
-	E2Manager e2.Manager
-	UeClient  ueclient.Client
+	appConfig   appConfig.Config
+	config      Config
+	E2Manager   e2.Manager
+	UenibClient uenib.Client
 }

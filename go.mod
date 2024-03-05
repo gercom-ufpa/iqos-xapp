@@ -3,6 +3,7 @@ module github.com/gercom-ufpa/iqos-xapp
 go 1.22.0
 
 require (
+	github.com/gogo/protobuf v1.3.2
 	github.com/onosproject/onos-api/go v0.10.31
 	github.com/onosproject/onos-lib-go v0.10.24
 	github.com/onosproject/onos-ric-sdk-go v0.8.12
@@ -11,14 +12,15 @@ require (
 require (
 	github.com/Shopify/sarama v1.31.1 // indirect
 	github.com/atomix/atomix/api v0.8.0 // indirect
+	github.com/cenkalti/backoff v2.2.1+incompatible // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/eapache/go-resiliency v1.2.0 // indirect
 	github.com/eapache/go-xerial-snappy v0.0.0-20180814174437-776d5712da21 // indirect
 	github.com/eapache/queue v1.1.0 // indirect
 	github.com/ericchiang/oidc v0.0.0-20160908143337-11f62933e071 // indirect
 	github.com/fsnotify/fsnotify v1.5.1 // indirect
-	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang-jwt/jwt/v5 v5.0.0 // indirect
+	github.com/golang/mock v1.6.0 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/uuid v1.6.0 // indirect
