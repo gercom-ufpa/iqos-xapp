@@ -3,6 +3,7 @@ module github.com/gercom-ufpa/iqos-xapp
 go 1.22.0
 
 require (
+	github.com/atomix/atomix/api v0.8.0
 	github.com/gogo/protobuf v1.3.2
 	github.com/onosproject/onos-api/go v0.10.31
 	github.com/onosproject/onos-lib-go v0.10.24
@@ -11,7 +12,6 @@ require (
 
 require (
 	github.com/Shopify/sarama v1.31.1 // indirect
-	github.com/atomix/atomix/api v0.8.0 // indirect
 	github.com/cenkalti/backoff v2.2.1+incompatible // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/eapache/go-resiliency v1.2.0 // indirect

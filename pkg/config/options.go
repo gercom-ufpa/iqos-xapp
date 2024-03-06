@@ -12,17 +12,6 @@ const (
 	GranularityPeriodConfigPath = "/reportPeriod/granularity"
 )
 
-// jsonFormat config
-type ConfigJson struct {
-	ReportPeriod ReportPeriod `json:"reportPeriod,omitempty"`
-}
-
-// report period parameters
-type ReportPeriod struct {
-	Interval    int64 `json:"interval,omitempty"`
-	Granularity int64 `json:"granularity,omitempty"`
-}
-
 // xApp Config interface
 type Config interface {
 	GetReportPeriod() (uint64, error)
