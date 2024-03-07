@@ -6,8 +6,10 @@ require (
 	github.com/atomix/atomix/api v0.8.0
 	github.com/gogo/protobuf v1.3.2
 	github.com/onosproject/onos-api/go v0.10.31
+	github.com/onosproject/onos-e2-sm/servicemodels/e2sm_rsm v0.8.43
 	github.com/onosproject/onos-lib-go v0.10.24
 	github.com/onosproject/onos-ric-sdk-go v0.8.12
+	github.com/onosproject/onos-rsm v0.2.5
 )
 
 require (
@@ -17,6 +19,7 @@ require (
 	github.com/eapache/go-resiliency v1.2.0 // indirect
 	github.com/eapache/go-xerial-snappy v0.0.0-20180814174437-776d5712da21 // indirect
 	github.com/eapache/queue v1.1.0 // indirect
+	github.com/envoyproxy/protoc-gen-validate v1.0.4 // indirect
 	github.com/ericchiang/oidc v0.0.0-20160908143337-11f62933e071 // indirect
 	github.com/fsnotify/fsnotify v1.5.1 // indirect
 	github.com/golang-jwt/jwt/v5 v5.0.0 // indirect
@@ -44,7 +47,7 @@ require (
 	github.com/pquerna/cachecontrol v0.0.0-20180517163645-1555304b9b35 // indirect
 	github.com/rcrowley/go-metrics v0.0.0-20201227073835-cf1acfcdf475 // indirect
 	github.com/rogpeppe/go-internal v1.10.0 // indirect
-	github.com/spf13/afero v1.8.2 // indirect
+	github.com/spf13/afero v1.10.0 // indirect
 	github.com/spf13/cast v1.4.1 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect

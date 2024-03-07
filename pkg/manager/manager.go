@@ -19,6 +19,7 @@ func NewManager(config Config) *Manager {
 	if err != nil {
 		log.Warn(err)
 	}
+	// subscriptionBroker := broker.NewBroker()
 
 	// Creates App Clients
 	// UE-NIB Client
