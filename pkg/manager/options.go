@@ -2,6 +2,7 @@ package manager
 
 import (
 	appConfig "github.com/gercom-ufpa/iqos-xapp/pkg/config"
+	"github.com/gercom-ufpa/iqos-xapp/pkg/nib/rnib"
 	"github.com/gercom-ufpa/iqos-xapp/pkg/nib/uenib"
 	"github.com/gercom-ufpa/iqos-xapp/pkg/southbound/e2"
 )
@@ -31,4 +32,5 @@ type Manager struct {
 	config      Config
 	E2Manager   e2.Manager
 	UenibClient uenib.Client
+	RnibClient  rnib.Client
 }

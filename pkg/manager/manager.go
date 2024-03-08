@@ -4,6 +4,7 @@ import (
 	"context"
 
 	appConfig "github.com/gercom-ufpa/iqos-xapp/pkg/config"
+	"github.com/gercom-ufpa/iqos-xapp/pkg/nib/rnib"
 	"github.com/gercom-ufpa/iqos-xapp/pkg/nib/uenib"
 	"github.com/gercom-ufpa/iqos-xapp/pkg/southbound/e2"
 	"github.com/onosproject/onos-lib-go/pkg/logging"
@@ -34,7 +35,15 @@ func NewManager(config Config) *Manager {
 		log.Warn(err)
 	}
 
-	// R-NIB Client (TODO)
+	// R-NIB Client
+	rnibConfig := rnib.Config{
+		TopoEndpoint: config.TopoEndpoint,
+		TopoPort:     config.TopoPort,
+	}
+	rnibClient, err := rnib.NewClient(rnibConfig)
+	if err != nil {
+		log.Warn(err)
+	}
 
 	// Creates App Managers
 
@@ -46,12 +55,12 @@ func NewManager(config Config) *Manager {
 		AppConfig:    appCfg,
 		E2tAddress:   config.E2tEndpoint,
 		E2tPort:      config.E2tPort,
-		TopoAddress:  config.TopoEndpoint,
-		TopoPort:     config.TopoPort,
 		KpmSMName:    config.KpmSMName,
 		KpmSMVersion: config.KpmSMVersion,
 		RsmSMName:    config.RsmSMName,
 		RsmSMVersion: config.RsmSMVersion,
+		UenibClient:  uenibClient,
+		RnibClient:   rnibClient,
 	}
 	e2Manager, err := e2.NewManager(e2config)
 	if err != nil {
@@ -64,6 +73,7 @@ func NewManager(config Config) *Manager {
 		config:      config,
 		E2Manager:   e2Manager,
 		UenibClient: uenibClient,
+		RnibClient:  rnibClient,
 	}
 
 	return manager
