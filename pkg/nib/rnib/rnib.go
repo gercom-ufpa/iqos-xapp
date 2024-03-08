@@ -305,9 +305,10 @@ func getControlRelationFilter() *topoapi.Filters {
 	return filter
 }
 
-// Gets target DU node ID by CU node ID
+// Gets target DU node ID by CU node ID | return DU ID connected to CU
 func (c *Client) GetTargetDUE2NodeID(ctx context.Context, cuE2NodeID topoapi.ID) (topoapi.ID, error) {
 	// TODO: When auto-discovery comes in, it should be changed
+
 	// gets topo objects
 	objects, err := c.client.List(ctx)
 	if err != nil {
@@ -318,11 +319,11 @@ func (c *Client) GetTargetDUE2NodeID(ctx context.Context, cuE2NodeID topoapi.ID)
 		log.Debugf("Relation: %v", obj.GetEntity())
 		if obj.GetEntity() != nil && obj.GetEntity().GetKindID() == topoapi.E2NODE { // check if the object is an E2 Node
 			if cuE2NodeID != obj.GetID() { // if nodeID is not from the CU itself
-				// format CU NodeID
+				// get part 1 and 2 of the CU NodeID
 				nodeID := fmt.Sprintf("%s/%s", strings.Split(string(cuE2NodeID), "/")[0], strings.Split(string(cuE2NodeID), "/")[1])
-				// format DU NodeID
+				// get part 1 and 2 of the DU NodeID
 				tgtNodeID := fmt.Sprintf("%s/%s", strings.Split(string(obj.GetID()), "/")[0], strings.Split(string(obj.GetID()), "/")[1])
-				if nodeID == tgtNodeID { // if DU contain part of CU ID, return DU ID
+				if nodeID == tgtNodeID { // if DU contain part of CU ID, return DU ID.
 					return obj.GetID(), nil
 				}
 			}
@@ -330,4 +331,60 @@ func (c *Client) GetTargetDUE2NodeID(ctx context.Context, cuE2NodeID topoapi.ID)
 	}
 
 	return "", errors.NewNotFound(fmt.Sprintf("DU-ID not found (CU-ID: %v)", cuE2NodeID))
+}
+
+// Gets source CU node ID by DU node ID | return CU ID connected to DU
+func (c *Client) GetSourceCUE2NodeID(ctx context.Context, duE2NodeID topoapi.ID) (topoapi.ID, error) {
+	// TODO: When auto-discovery comes in, it should be changed
+
+	// gets topo objects
+	objects, err := c.client.List(ctx)
+	if err != nil {
+		return "", err
+	}
+
+	for _, obj := range objects {
+		log.Debugf("Relation: %v", obj.GetEntity())
+		if obj.GetEntity() != nil && obj.GetEntity().GetKindID() == topoapi.E2NODE { // check if the object is an E2 Node
+			if duE2NodeID != obj.GetID() { // if nodeID is not from the DU itself
+				// get part 1 and 2 of the DU NodeID
+				nodeID := fmt.Sprintf("%s/%s", strings.Split(string(duE2NodeID), "/")[0], strings.Split(string(duE2NodeID), "/")[1])
+				// get part 1 and 2 of the CU NodeID
+				tgtNodeID := fmt.Sprintf("%s/%s", strings.Split(string(obj.GetID()), "/")[0], strings.Split(string(obj.GetID()), "/")[1])
+				if nodeID == tgtNodeID { // if CU contain part of DU ID, return CU ID.
+					return obj.GetID(), nil
+				}
+			}
+		}
+	}
+
+	return "", errors.NewNotFound(fmt.Sprintf("CU-ID not found (DU-ID: %v)", duE2NodeID))
+}
+
+// Gets RSMSlicingItem aspects on all DUs | return list of RSMSlicingItem aspects per DUs
+func (c *Client) GetRSMSliceItemAspectsForAllDUs(ctx context.Context) (map[string][]*topoapi.RSMSlicingItem, error) {
+	// creates a list with RSMSlicingItem aspect data format
+	dusRsmAspectList := make(map[string][]*topoapi.RSMSlicingItem)
+	// gets topo object list
+	objects, err := c.client.List(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, obj := range objects {
+		if obj.GetEntity() != nil && obj.GetEntity().GetKindID() == topoapi.E2NODE { // check if the object is an E2 Node
+			if len(strings.Split(string(obj.GetID()), "/")) == 4 && strings.Split(string(obj.GetID()), "/")[2] == "3" { // check if the E2Node is a DU
+				// gets RSMSlicingItem aspect data format
+				rsmAspect := &topoapi.RSMSliceItemList{}
+				err = obj.GetAspect(rsmAspect)
+				if err != nil {
+					return nil, err
+				}
+				// adds DU's RSM aspect to list
+				dusRsmAspectList[string(obj.GetID())] = rsmAspect.GetRsmSliceList()
+			}
+		}
+	}
+
+	return dusRsmAspectList, nil
 }
