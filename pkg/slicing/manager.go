@@ -1,4 +1,4 @@
-package slicemgr
+package slicing
 
 import (
 	"context"

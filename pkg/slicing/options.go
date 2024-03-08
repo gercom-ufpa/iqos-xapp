@@ -1,4 +1,4 @@
-package slicemgr
+package slicing
 
 import (
 	"github.com/onosproject/onos-rsm/pkg/nib/rnib"
