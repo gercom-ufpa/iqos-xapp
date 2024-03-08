@@ -17,6 +17,7 @@ var log = logging.GetLogger("iqos-xapp", "rnib")
 
 // Creates a new topo client (R-NIB) | return topo client with your configs
 func NewClient(config Config) (Client, error) {
+	log.Info("Creating a new R-NIB client")
 	// new topo client
 	sdkClient, err := toposdk.NewClient(
 		toposdk.WithTopoAddress(

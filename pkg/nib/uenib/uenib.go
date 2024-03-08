@@ -16,6 +16,7 @@ var log = logging.GetLogger("iqos-xapp", "uenib")
 
 // creates a new UE Client
 func NewClient(ctx context.Context, config Config) (Client, error) {
+	log.Info("Creating a new UE-NIB client")
 	// onos-uenib address
 	ueNibServiceAddress := config.UeNibEndpoint + ":" + strconv.Itoa(config.UeNibPort)
 	// connects to UE NIB service
