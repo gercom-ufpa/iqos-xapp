@@ -305,8 +305,10 @@ func getControlRelationFilter() *topoapi.Filters {
 	return filter
 }
 
+// Gets target DU node ID by CU node ID
 func (c *Client) GetTargetDUE2NodeID(ctx context.Context, cuE2NodeID topoapi.ID) (topoapi.ID, error) {
-	// ToDo: When auto-discovery comes in, it should be changed
+	// TODO: When auto-discovery comes in, it should be changed
+	// gets topo objects
 	objects, err := c.client.List(ctx)
 	if err != nil {
 		return "", err
@@ -314,11 +316,13 @@ func (c *Client) GetTargetDUE2NodeID(ctx context.Context, cuE2NodeID topoapi.ID)
 
 	for _, obj := range objects {
 		log.Debugf("Relation: %v", obj.GetEntity())
-		if obj.GetEntity() != nil && obj.GetEntity().GetKindID() == topoapi.E2NODE {
-			if cuE2NodeID != obj.GetID() {
+		if obj.GetEntity() != nil && obj.GetEntity().GetKindID() == topoapi.E2NODE { // check if the object is an E2 Node
+			if cuE2NodeID != obj.GetID() { // if nodeID is not from the CU itself
+				// format CU NodeID
 				nodeID := fmt.Sprintf("%s/%s", strings.Split(string(cuE2NodeID), "/")[0], strings.Split(string(cuE2NodeID), "/")[1])
+				// format DU NodeID
 				tgtNodeID := fmt.Sprintf("%s/%s", strings.Split(string(obj.GetID()), "/")[0], strings.Split(string(obj.GetID()), "/")[1])
-				if nodeID == tgtNodeID {
+				if nodeID == tgtNodeID { // if DU contain part of CU ID, return DU ID
 					return obj.GetID(), nil
 				}
 			}
