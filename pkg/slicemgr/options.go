@@ -10,13 +10,13 @@ import (
 type Manager struct {
 	rsmMsgCh              chan *northbound.RsmMsg
 	ctrlReqChsSliceCreate map[string]chan *e2.CtrlMsg
-	ctrlReqChsSliceUpdate map[string]chan *e2.CtrlMsg
+	// ctrlReqChsSliceUpdate map[string]chan *e2.CtrlMsg
 	ctrlReqChsSliceDelete map[string]chan *e2.CtrlMsg
-	ctrlReqChsUeAssociate map[string]chan *e2.CtrlMsg
-	rnibClient            rnib.TopoClient
-	uenibClient           uenib.Client
-	ctrlMsgHandler        e2.ControlMessageHandler
-	ackTimer              int
+	// ctrlReqChsUeAssociate map[string]chan *e2.CtrlMsg
+	rnibClient     rnib.TopoClient
+	uenibClient    uenib.Client
+	ctrlMsgHandler e2.ControlMessageHandler
+	ackTimer       int
 }
 
 type Options struct {
