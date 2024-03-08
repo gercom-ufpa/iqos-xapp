@@ -14,7 +14,7 @@ import (
 	"github.com/onosproject/onos-rsm/pkg/southbound/e2" // TODO:
 )
 
-var log = logging.GetLogger()
+var log = logging.GetLogger("iqos-xapp", "slicemgr")
 
 func NewManager(opts ...Option) Manager { // start slicing manager with configs applyied in options.go
 	log.Info("Init IQoS-xApp Slicing Manager")
@@ -98,7 +98,7 @@ func (m *Manager) handleNbiCreateSliceRequest(ctx context.Context, req *rsmapi.C
 		sliceSchedulerType = e2sm_rsm.SchedulerType_SCHEDULER_TYPE_ROUND_ROBIN
 	}
 
-	var sliceType e2sm_rsm.SliceType// atribuição de valores para o tipo de slice
+	var sliceType e2sm_rsm.SliceType // atribuição de valores para o tipo de slice
 	switch req.SliceType {
 	case rsmapi.SliceType_SLICE_TYPE_DL_SLICE:
 		sliceType = e2sm_rsm.SliceType_SLICE_TYPE_DL_SLICE
@@ -118,8 +118,8 @@ func (m *Manager) handleNbiCreateSliceRequest(ctx context.Context, req *rsmapi.C
 		},
 		SliceType: sliceType,
 	}
-	ctrlMsg, err := m.ctrlMsgHandler.CreateControlRequest(cmdType, sliceConfig, nil) //  manipulador de mensagens de controle para criar uma mensagem de controle E2 
-	if err != nil {																	 //  destinada a executar a criação da fatia com a configuração especificada
+	ctrlMsg, err := m.ctrlMsgHandler.CreateControlRequest(cmdType, sliceConfig, nil) //  manipulador de mensagens de controle para criar uma mensagem de controle E2
+	if err != nil {                                                                  //  destinada a executar a criação da fatia com a configuração especificada
 		return fmt.Errorf("failed to create the control message - %v", err.Error())
 	}
 
@@ -165,7 +165,7 @@ func (m *Manager) handleNbiCreateSliceRequest(ctx context.Context, req *rsmapi.C
 	}
 
 	err = m.rnibClient.AddRsmSliceItemAspect(ctx, topoapi.ID(req.E2NodeId), value) // Se o registro falhar por algum motivo
-																				   // a função retorna um erro indicando a falha no registro da fatia no RNIB
+	// a função retorna um erro indicando a falha no registro da fatia no RNIB
 	if err != nil {
 		return fmt.Errorf("failed to create slice information to onos-topo although control message was sent: %v", err)
 	}
