@@ -3,6 +3,7 @@ package manager
 import (
 	"context"
 
+	"github.com/gercom-ufpa/iqos-xapp/pkg/broker"
 	appConfig "github.com/gercom-ufpa/iqos-xapp/pkg/config"
 	"github.com/gercom-ufpa/iqos-xapp/pkg/nib/rnib"
 	"github.com/gercom-ufpa/iqos-xapp/pkg/nib/uenib"
@@ -45,22 +46,40 @@ func NewManager(config Config) *Manager {
 		log.Warn(err)
 	}
 
+	// Control messages used by the e2 and slicemgr packages
+	slicingCtrlMsgs := e2.SlicingCtrlMsgs{
+		CtrlReqChsSliceCreate: make(map[string]chan *e2.CtrlMsg),
+		CtrlReqChsSliceUpdate: make(map[string]chan *e2.CtrlMsg),
+		CtrlReqChsSliceDelete: make(map[string]chan *e2.CtrlMsg),
+		CtrlReqChsUeAssociate: make(map[string]chan *e2.CtrlMsg),
+	}
+
 	// Creates App Managers
 
 	// A1 Manager (or client?? - TODO)
 
 	// E2 manager
-	e2config := e2.Config{
-		AppID:        config.AppID,
-		AppConfig:    appCfg,
-		E2tAddress:   config.E2tEndpoint,
-		E2tPort:      config.E2tPort,
-		KpmSMName:    config.KpmSMName,
-		KpmSMVersion: config.KpmSMVersion,
+	// set Service Models
+	serviceModels := e2.ServiceModels{
+		KpmSMName:    config.KpmSMName,    // not yet used
+		KpmSMVersion: config.KpmSMVersion, // not yet used
 		RsmSMName:    config.RsmSMName,
 		RsmSMVersion: config.RsmSMVersion,
-		UenibClient:  uenibClient,
-		RnibClient:   rnibClient,
+	}
+
+	// creates the subscriptions broker
+	subscriptionBroker := broker.NewBroker()
+
+	e2config := e2.Config{
+		AppID:           config.AppID,
+		AppConfig:       appCfg,
+		E2tAddress:      config.E2tEndpoint,
+		E2tPort:         config.E2tPort,
+		ServiceModels:   serviceModels,
+		Broker:          subscriptionBroker,
+		UenibClient:     uenibClient,
+		RnibClient:      rnibClient,
+		SlicingCtrlMsgs: slicingCtrlMsgs,
 	}
 	e2Manager, err := e2.NewManager(e2config)
 	if err != nil {
