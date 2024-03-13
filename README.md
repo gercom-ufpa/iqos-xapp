@@ -10,5 +10,3 @@
 ### Installation
 
 ### Configuration
-
-test
