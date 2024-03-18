@@ -58,8 +58,8 @@ func (c *Client) DeleteRsmSliceList(ctx context.Context, nodeID topoapi.ID) erro
 	return nil
 }
 
-// Checks if E2Node has RSM Service Model
-func (c *Client) HasRSMRANFunction(ctx context.Context, nodeID topoapi.ID, oid string) bool {
+// Checks if E2Node has a RAN Function by its OID
+func (c *Client) HasRANFunction(ctx context.Context, nodeID topoapi.ID, oid string) bool {
 	// get E2Nodes aspects
 	e2Node, err := c.GetE2NodeAspects(ctx, nodeID)
 	if err != nil {

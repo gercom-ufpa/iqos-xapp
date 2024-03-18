@@ -14,14 +14,13 @@ import (
 // log initialize
 var log = logging.GetLogger("iqos-xapp", "manager")
 
-// new xApp Manager
+// New xApp Manager
 func NewManager(config Config) *Manager {
 	// initializes xApp configuration
 	appCfg, err := appConfig.NewConfig(config.ConfigPath)
 	if err != nil {
 		log.Warn(err)
 	}
-	// subscriptionBroker := broker.NewBroker()
 
 	// Creates App Clients
 	// UE-NIB Client

@@ -30,7 +30,7 @@ type Config struct {
 
 // E2 Manager
 type Manager struct {
-	AppID       string
+	appID       string
 	appConfig   *appConfig.AppConfig
 	e2Client    e2client.Client
 	rnibClient  rnib.Client
