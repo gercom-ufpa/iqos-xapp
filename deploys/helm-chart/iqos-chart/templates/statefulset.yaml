@@ -5,7 +5,7 @@ metadata:
   labels:
     {{- include "iqos-chart.labels" . | nindent 4 }}
   annotations:
-      keel.sh/policy: all     # update policy (available: patch, minor, major, all, force)
+      keel.sh/policy: force     # update policy (available: patch, minor, major, all, force)
       keel.sh/trigger: poll     # enable active repository checking (webhooks and GCR would still work)
       keel.sh/pollSchedule: "@every 5s"
 
