@@ -84,7 +84,7 @@ func (c *Client) GetE2NodeAspects(ctx context.Context, nodeID topoapi.ID) (*topo
 		return nil, err
 	}
 	// check if object is an E2 Node
-	if object.Type.String() != "e2node" {
+	if object.GetEntity().GetKindID() != "e2node" {
 		return nil, errors.NewInvalid("The topo object with ID %v is not an E2 Node", nodeID)
 	}
 
