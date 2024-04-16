@@ -78,16 +78,16 @@ func (c *Client) HasRANFunction(ctx context.Context, nodeID topoapi.ID, oid stri
 
 // Gets E2 Node aspects
 func (c *Client) GetE2NodeAspects(ctx context.Context, nodeID topoapi.ID) (*topoapi.E2Node, error) {
+	log.Debug(object.GetEntity().GetKindID())
+	log.Debug(object.GetKind().GetName())
+	log.Info("test")
+	log.Info("test2")
+
 	// get object by NodeID
 	object, err := c.client.Get(ctx, nodeID)
 	if err != nil {
 		return nil, err
 	}
-
-	log.Debug(object.GetEntity().GetKindID())
-	log.Debug(object.GetKind().GetName())
-	log.Info("test")
-	log.Info("test2")
 
 	// check if object is an E2 Node
 	if object.GetEntity().GetKindID() != "e2node" {
