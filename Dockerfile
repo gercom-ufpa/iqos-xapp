@@ -1,6 +1,6 @@
 ARG XAPPNAME=iqos-xapp
 
-FROM golang:1.22.0 as build
+FROM golang:1.22.2 as build
 
 ARG XAPPNAME
 WORKDIR /usr/src/github.com/gercom-ufpa/${XAPPNAME}/
