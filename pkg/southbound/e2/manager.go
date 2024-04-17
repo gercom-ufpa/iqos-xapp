@@ -105,7 +105,7 @@ func (m *Manager) watchE2Connections(ctx context.Context) error {
 					}()
 				}
 			}
-		}
+		} // TODO: Add others cases
 	}
 	return nil
 }

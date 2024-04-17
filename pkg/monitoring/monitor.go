@@ -87,14 +87,14 @@ func (m *Monitor) processIndication(ctx context.Context, indMsg e2api.Indication
 // Process indication message on format 1
 func (m *Monitor) processMetricTypeMessage(_ context.Context, indHdr *e2sm_rsm.E2SmRsmIndicationHeaderFormat1, indMsg *e2sm_rsm.E2SmRsmIndicationMessageFormat1) error {
 	// TODO: use it to ensure elastic slice
-	log.Debugf("Received indication message (Metric) hdr: %v / msg: %v", indHdr, indMsg)
+	log.Warnf("Received indication message (Metric) hdr: %v / msg: %v", indHdr, indMsg)
 
 	return nil
 }
 
 // Process indication message on format 2
 func (m *Monitor) processEmmEventMessage(ctx context.Context, indHdr *e2sm_rsm.E2SmRsmIndicationHeaderFormat1, indMsg *e2sm_rsm.E2SmRsmIndicationMessageFormat2, cuNodeID string) error {
-	log.Debugf("Received indication message (EMM) hdr: %v / msg: %v", indHdr, indMsg)
+	log.Warnf("Received indication message (EMM) hdr: %v / msg: %v", indHdr, indMsg)
 
 	return nil
 }
