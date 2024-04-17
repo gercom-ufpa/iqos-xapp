@@ -14,7 +14,7 @@ var log = logging.GetLogger("iqos-xapp", "main")
 
 func main() {
 	// defines log level
-	log.SetLevel(logging.DebugLevel)
+	logging.SetLevel(logging.DebugLevel)
 
 	// initial app message
 	log.Info("Starting IQoS xAPP")
