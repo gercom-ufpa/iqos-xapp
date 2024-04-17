@@ -1,6 +1,6 @@
 module github.com/gercom-ufpa/iqos-xapp
 
-go 1.22.0
+go 1.22.2
 
 require (
 	github.com/atomix/atomix/api v0.8.0
@@ -11,6 +11,7 @@ require (
 	github.com/onosproject/onos-ric-sdk-go v0.8.12
 	github.com/onosproject/onos-rsm v0.2.5
 	google.golang.org/grpc v1.62.0
+	google.golang.org/protobuf v1.32.0
 )
 
 require (
@@ -65,7 +66,6 @@ require (
 	golang.org/x/text v0.14.0 // indirect
 	google.golang.org/appengine v1.6.8 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240123012728-ef4313101c80 // indirect
-	google.golang.org/protobuf v1.32.0 // indirect
 	gopkg.in/ini.v1 v1.66.4 // indirect
 	gopkg.in/square/go-jose.v1 v1.1.2 // indirect
 	gopkg.in/square/go-jose.v2 v2.6.0 // indirect
