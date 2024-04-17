@@ -13,6 +13,7 @@ import (
 type Monitor struct {
 	streamReader           broker.StreamReader
 	appConfig              *appConfig.AppConfig
+	node                   e2client.Node
 	nodeID                 topoapi.ID
 	rnibClient             rnib.Client
 	uenibClient            uenib.Client
@@ -20,6 +21,7 @@ type Monitor struct {
 }
 
 type Config struct {
+	AppConfig        *appConfig.AppConfig
 	Node             e2client.Node
 	NodeID           topoapi.ID
 	StreamReader     broker.StreamReader

@@ -11,7 +11,7 @@ require (
 	github.com/onosproject/onos-ric-sdk-go v0.8.12
 	github.com/onosproject/onos-rsm v0.2.5
 	google.golang.org/grpc v1.62.0
-	google.golang.org/protobuf v1.32.0
+	google.golang.org/protobuf v1.33.0
 )
 
 require (
