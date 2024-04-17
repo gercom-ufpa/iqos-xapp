@@ -7,6 +7,7 @@ import (
 
 	"github.com/atomix/atomix/api/errors"
 	"github.com/gercom-ufpa/iqos-xapp/pkg/broker"
+	"github.com/gercom-ufpa/iqos-xapp/pkg/monitoring"
 	prototypes "github.com/gogo/protobuf/types"
 	e2api "github.com/onosproject/onos-api/go/onos/e2t/e2/v1beta1"
 	topoapi "github.com/onosproject/onos-api/go/onos/topo"
@@ -160,7 +161,23 @@ func (m *Manager) createSubscription(ctx context.Context, e2nodeID topoapi.ID, e
 	// sends indications to stream
 	go m.sendIndicationOnStream(streamReader.StreamID(), ch)
 
-	// TODO: write the monitor to handle stream information
+	// Monitor to handle stream informations
+	monitorConfig := monitoring.Config{
+		AppConfig:        m.appConfig,
+		Node:             e2Node,
+		NodeID:           e2nodeID,
+		StreamReader:     streamReader,
+		RnibClient:       m.rnibClient,
+		UeClient:         m.uenibClient,
+		EventTriggerType: eventTrigger,
+	}
+	monitor := monitoring.NewMonitor(monitorConfig) // starts monitor
+	err = monitor.Start(ctx)
+	if err != nil {
+		log.Warn(err)
+		return err
+	}
+
 	return nil
 }
 
