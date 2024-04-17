@@ -13,8 +13,8 @@ import (
 var log = logging.GetLogger("iqos-xapp", "main")
 
 func main() {
-	// defines log level
-	logging.SetLevel(logging.DebugLevel)
+	// defines local log level
+	log.SetLevel(logging.DebugLevel)
 
 	// initial app message
 	log.Info("Starting IQoS xAPP")

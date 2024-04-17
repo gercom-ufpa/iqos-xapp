@@ -62,7 +62,6 @@ func (c *Client) DeleteRsmSliceList(ctx context.Context, nodeID topoapi.ID) erro
 func (c *Client) HasRANFunction(ctx context.Context, nodeID topoapi.ID, oid string) bool {
 	// get E2Nodes aspects
 	e2Node, err := c.GetE2NodeAspects(ctx, nodeID)
-	log.Warn(log.GetLevel().String())
 	if err != nil {
 		log.Warn(err)
 		return false
