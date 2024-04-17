@@ -62,7 +62,7 @@ func (c *Client) DeleteRsmSliceList(ctx context.Context, nodeID topoapi.ID) erro
 func (c *Client) HasRANFunction(ctx context.Context, nodeID topoapi.ID, oid string) bool {
 	// get E2Nodes aspects
 	e2Node, err := c.GetE2NodeAspects(ctx, nodeID)
-	log.Debug("test2")
+	log.Debug("test HasRANFunc")
 	if err != nil {
 		log.Warn(err)
 		return false
@@ -81,7 +81,6 @@ func (c *Client) HasRANFunction(ctx context.Context, nodeID topoapi.ID, oid stri
 func (c *Client) GetE2NodeAspects(ctx context.Context, nodeID topoapi.ID) (*topoapi.E2Node, error) {
 	// get object by NodeID
 	object, err := c.client.Get(ctx, nodeID)
-	log.Debug("test")
 	if err != nil {
 		return nil, err
 	}
