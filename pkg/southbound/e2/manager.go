@@ -22,6 +22,7 @@ import (
 var log = logging.GetLogger("iqos-xapp", "e2")
 
 func NewManager(config Config) (Manager, error) {
+	log.SetLevel(logging.DebugLevel) // TODO: remove me in production
 	// creates a E2 Client
 	e2Client := e2client.NewClient(
 		e2client.WithAppID(e2client.AppID(config.AppID)),
