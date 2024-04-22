@@ -198,7 +198,7 @@ func (m *Manager) createSubscription(ctx context.Context, e2nodeID topoapi.ID, e
 		log.Warn(err)
 		return err
 	}
-	log.Debug("Subscription Channel ID: %v", channelID)
+	log.Debugf("Subscription Channel ID: %v", channelID)
 
 	// creates a new stream reader to subscription
 	streamReader, err := m.streams.OpenReader(ctx, e2Node, subName, channelID, subSpec)
