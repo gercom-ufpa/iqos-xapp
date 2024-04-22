@@ -164,8 +164,8 @@ func (m *Manager) createSubscription(ctx context.Context, e2nodeID topoapi.ID, e
 	// Monitor to handle stream informations
 	monitorConfig := monitoring.Config{
 		AppConfig:        m.appConfig,
-		Node:             e2Node,
-		NodeID:           e2nodeID,
+		Node:             e2Node,   // CU
+		NodeID:           e2nodeID, // CU ID
 		StreamReader:     streamReader,
 		RnibClient:       m.rnibClient,
 		UeClient:         m.uenibClient,

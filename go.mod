@@ -5,6 +5,7 @@ go 1.22.2
 require (
 	github.com/atomix/atomix/api v0.8.0
 	github.com/gogo/protobuf v1.3.2
+	github.com/google/uuid v1.6.0
 	github.com/onosproject/onos-api/go v0.10.31
 	github.com/onosproject/onos-e2-sm/servicemodels/e2sm_rsm v0.8.43
 	github.com/onosproject/onos-lib-go v0.10.24
@@ -28,7 +29,6 @@ require (
 	github.com/golang/mock v1.6.0 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
-	github.com/google/uuid v1.6.0 // indirect
 	github.com/grpc-ecosystem/go-grpc-middleware v1.4.0 // indirect
 	github.com/hashicorp/go-uuid v1.0.2 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect

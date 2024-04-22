@@ -6,7 +6,7 @@ import (
 	"io"
 	"strconv"
 
-	"github.com/onosproject/onos-api/go/onos/uenib"
+	uenib_api "github.com/onosproject/onos-api/go/onos/uenib"
 	"github.com/onosproject/onos-lib-go/pkg/errors"
 	"github.com/onosproject/onos-lib-go/pkg/logging"
 	"github.com/onosproject/onos-lib-go/pkg/southbound"
@@ -25,7 +25,7 @@ func NewClient(ctx context.Context, config Config) (Client, error) {
 		return Client{}, err
 	}
 	// creates a ue-nib client
-	uenibClient := uenib.NewUEServiceClient(conn)
+	uenibClient := uenib_api.NewUEServiceClient(conn)
 
 	return Client{
 		uenibClient: uenibClient,
@@ -36,16 +36,16 @@ func NewClient(ctx context.Context, config Config) (Client, error) {
 // <--- To Slice Manager module ---->
 
 // Gets UE through your global ID | return an UE
-func (c *Client) getUEWithGlobalID(ctx context.Context, ueGlobalId string) (uenib.UE, error) {
+func (c *Client) getUEWithGlobalID(ctx context.Context, ueGlobalId string) (uenib_api.UE, error) {
 	// creates an UE request
-	req := &uenib.GetUERequest{
-		ID: uenib.ID(ueGlobalId),
+	req := &uenib_api.GetUERequest{
+		ID: uenib_api.ID(ueGlobalId),
 	}
 
 	// gets an UE response
 	resp, err := c.uenibClient.GetUE(ctx, req)
 	if err != nil {
-		return uenib.UE{}, err
+		return uenib_api.UE{}, err
 	}
 
 	// return an UE
@@ -53,14 +53,14 @@ func (c *Client) getUEWithGlobalID(ctx context.Context, ueGlobalId string) (ueni
 }
 
 // Gets UEs on the network | return RsmUeInfo aspect of each UE
-func (c *Client) GetRsmUEs(ctx context.Context) ([]*uenib.RsmUeInfo, error) {
+func (c *Client) GetRsmUEs(ctx context.Context) ([]*uenib_api.RsmUeInfo, error) {
 	// creates a result with RsmUeInfo aspect format
-	result := make([]*uenib.RsmUeInfo, 0)
+	result := make([]*uenib_api.RsmUeInfo, 0)
 
 	// creates a list UEs stream
-	stream, err := c.uenibClient.ListUEs(ctx, &uenib.ListUERequest{})
+	stream, err := c.uenibClient.ListUEs(ctx, &uenib_api.ListUERequest{})
 	if err != nil {
-		return []*uenib.RsmUeInfo{}, err
+		return []*uenib_api.RsmUeInfo{}, err
 	}
 
 	// iterate over the stream
@@ -70,15 +70,15 @@ func (c *Client) GetRsmUEs(ctx context.Context) ([]*uenib.RsmUeInfo, error) {
 		if err == io.EOF {
 			break
 		} else if err != nil {
-			return []*uenib.RsmUeInfo{}, err
+			return []*uenib_api.RsmUeInfo{}, err
 		}
 		// gets UE
 		ue := response.GetUE()
 		// RsmUeInfo aspect
-		rsmUE := &uenib.RsmUeInfo{}
+		rsmUE := &uenib_api.RsmUeInfo{}
 		err = ue.GetAspect(rsmUE)
 		if err != nil {
-			return []*uenib.RsmUeInfo{}, err
+			return []*uenib_api.RsmUeInfo{}, err
 		}
 
 		result = append(result, rsmUE)
@@ -87,7 +87,7 @@ func (c *Client) GetRsmUEs(ctx context.Context) ([]*uenib.RsmUeInfo, error) {
 }
 
 // Checks if a RSM UE already exists
-func (c *Client) HasRsmUE(ctx context.Context, rsmUeAspect *uenib.RsmUeInfo) bool {
+func (c *Client) HasRsmUE(ctx context.Context, rmsUE *uenib_api.RsmUeInfo) bool {
 	// gets a list of UEs with RSM aspects
 	rsmUes, err := c.GetRsmUEs(ctx)
 	if err != nil {
@@ -98,42 +98,42 @@ func (c *Client) HasRsmUE(ctx context.Context, rsmUeAspect *uenib.RsmUeInfo) boo
 	// iterate of UEs
 	for _, item := range rsmUes {
 		// TODO: Is it necessary to check all these values?
-		if item.GetGlobalUeID() == rsmUeAspect.GetGlobalUeID() &&
-			item.GetUeIdList().GetDuUeF1apID().Value == rsmUeAspect.GetUeIdList().GetDuUeF1apID().Value &&
-			item.GetUeIdList().GetCuUeF1apID().Value == rsmUeAspect.GetUeIdList().GetCuUeF1apID().Value &&
-			item.GetUeIdList().GetRANUeNgapID().Value == rsmUeAspect.GetUeIdList().GetRANUeNgapID().Value && // for 5G ?
-			item.GetUeIdList().GetEnbUeS1apID().Value == rsmUeAspect.GetUeIdList().GetEnbUeS1apID().Value && // for 4G
-			item.GetUeIdList().GetAMFUeNgapID().Value == rsmUeAspect.GetUeIdList().GetAMFUeNgapID().Value && // for 5G
-			item.GetUeIdList().GetPreferredIDType().String() == rsmUeAspect.GetUeIdList().GetPreferredIDType().String() &&
-			item.GetCellGlobalId() == rsmUeAspect.GetCellGlobalId() &&
-			item.GetCuE2NodeId() == rsmUeAspect.GetCuE2NodeId() && item.GetDuE2NodeId() == rsmUeAspect.GetDuE2NodeId() {
+		if item.GetGlobalUeID() == rmsUE.GetGlobalUeID() &&
+			item.GetUeIdList().GetDuUeF1apID().Value == rmsUE.GetUeIdList().GetDuUeF1apID().Value &&
+			item.GetUeIdList().GetCuUeF1apID().Value == rmsUE.GetUeIdList().GetCuUeF1apID().Value &&
+			item.GetUeIdList().GetRANUeNgapID().Value == rmsUE.GetUeIdList().GetRANUeNgapID().Value && // for 5G ?
+			item.GetUeIdList().GetEnbUeS1apID().Value == rmsUE.GetUeIdList().GetEnbUeS1apID().Value && // for 4G
+			item.GetUeIdList().GetAMFUeNgapID().Value == rmsUE.GetUeIdList().GetAMFUeNgapID().Value && // for 5G
+			item.GetUeIdList().GetPreferredIDType().String() == rmsUE.GetUeIdList().GetPreferredIDType().String() &&
+			item.GetCellGlobalId() == rmsUE.GetCellGlobalId() &&
+			item.GetCuE2NodeId() == rmsUE.GetCuE2NodeId() && item.GetDuE2NodeId() == rmsUE.GetDuE2NodeId() {
 			return true
 		}
 	}
 
-	log.Debugf("onos-uenib has UE %v", *rsmUeAspect)
+	log.Debugf("onos-uenib has UE %v", *rmsUE)
 	return false
 }
 
 // Adds an UE with RsmUEInfo aspect
-func (c *Client) AddRsmUE(ctx context.Context, rsmUeAspect *uenib.RsmUeInfo) error {
-	log.Debugf("received ue: %v", rsmUeAspect)
+func (c *Client) AddRsmUE(ctx context.Context, rmsUE *uenib_api.RsmUeInfo) error {
+	log.Debugf("received ue: %v", rmsUE)
 
 	// checks if UE already exist
-	if c.HasRsmUE(ctx, rsmUeAspect) {
-		return errors.NewAlreadyExists(fmt.Sprintf("UE already exists - UE: %v", *rsmUeAspect))
+	if c.HasRsmUE(ctx, rmsUE) {
+		return errors.NewAlreadyExists(fmt.Sprintf("UE already exists - UE: %v", *rmsUE))
 	}
 
 	// creates an obj UE
-	uenibObj := uenib.UE{
-		ID: uenib.ID(rsmUeAspect.GetGlobalUeID()),
+	uenibObj := uenib_api.UE{
+		ID: uenib_api.ID(rmsUE.GetGlobalUeID()),
 	}
 
 	// sets aspect
-	uenibObj.SetAspect(rsmUeAspect)
+	uenibObj.SetAspect(rmsUE)
 
 	// creates an UE create request
-	req := &uenib.CreateUERequest{
+	req := &uenib_api.CreateUERequest{
 		UE: uenibObj,
 	}
 
@@ -148,22 +148,22 @@ func (c *Client) AddRsmUE(ctx context.Context, rsmUeAspect *uenib.RsmUeInfo) err
 }
 
 // Updates an existing RSM UE
-func (c *Client) UpdateRsmUE(ctx context.Context, rsmUeAspect *uenib.RsmUeInfo) error {
+func (c *Client) UpdateRsmUE(ctx context.Context, rsmUE *uenib_api.RsmUeInfo) error {
 	// checks if UE already exist
-	if !c.HasRsmUE(ctx, rsmUeAspect) {
-		return errors.NewNotFound(fmt.Sprintf("UE not found - UE: %v", *rsmUeAspect))
+	if !c.HasRsmUE(ctx, rsmUE) {
+		return errors.NewNotFound(fmt.Sprintf("UE not found - UE: %v", *rsmUE))
 	}
 
 	// creates an obj UE
-	uenibObj := uenib.UE{
-		ID: uenib.ID(rsmUeAspect.GetGlobalUeID()),
+	uenibObj := uenib_api.UE{
+		ID: uenib_api.ID(rsmUE.GetGlobalUeID()),
 	}
 
 	// sets aspect
-	uenibObj.SetAspect(rsmUeAspect)
+	uenibObj.SetAspect(rsmUE)
 
 	// creates an UE create request
-	req := &uenib.UpdateUERequest{
+	req := &uenib_api.UpdateUERequest{
 		UE: uenibObj,
 	}
 
@@ -189,7 +189,7 @@ func (c *Client) DeleteUE(ctx context.Context, ueGlobalId string) error {
 	}
 
 	// creates a rsmUeInfo aspect
-	rsmUE := &uenib.RsmUeInfo{}
+	rsmUE := &uenib_api.RsmUeInfo{}
 	// gets rsmUeInfo aspect from UE
 	err = ue.GetAspect(rsmUE)
 	if err != nil {
@@ -202,8 +202,8 @@ func (c *Client) DeleteUE(ctx context.Context, ueGlobalId string) error {
 	}
 
 	// creates a requisition to delete UE
-	req := &uenib.DeleteUERequest{
-		ID: uenib.ID(rsmUE.GetGlobalUeID()),
+	req := &uenib_api.DeleteUERequest{
+		ID: uenib_api.ID(rsmUE.GetGlobalUeID()),
 	}
 
 	// deletes UE
@@ -217,7 +217,7 @@ func (c *Client) DeleteUE(ctx context.Context, ueGlobalId string) error {
 }
 
 // deletes an RSM UE from specific infrastructure/technology
-func (c *Client) DeleteRsmUEWithPreferredID(ctx context.Context, cuNodeID string, preferredType uenib.UeIdType, ueConnectionTypeID int64) error {
+func (c *Client) DeleteRsmUEWithPreferredID(ctx context.Context, cuNodeID string, preferredType uenib_api.UeIdType, ueConnectionTypeID int64) error {
 	log.Debugf("received CUID: %v, preferredType: %v, ueID: %v", cuNodeID, preferredType, ueConnectionTypeID)
 	// gets UE
 	rsmUE, err := c.GetRsmUEWithPreferredID(ctx, cuNodeID, preferredType, ueConnectionTypeID)
@@ -250,52 +250,52 @@ func (c *Client) DeleteUEWithE2NodeID(ctx context.Context, e2NodeID string) erro
 }
 
 // gets an RSM UE from specific infrastructure/technology | return RsmUeInfo aspect from UE
-func (c *Client) GetRsmUEWithPreferredID(ctx context.Context, cuNodeID string, preferredType uenib.UeIdType, ueConnectionTypeID int64) (uenib.RsmUeInfo, error) {
-	var result uenib.RsmUeInfo
+func (c *Client) GetRsmUEWithPreferredID(ctx context.Context, cuNodeID string, preferredType uenib_api.UeIdType, ueConnectionTypeID int64) (uenib_api.RsmUeInfo, error) {
+	var result uenib_api.RsmUeInfo
 	hasUE := false
 
 	// gets RSM UEs
 	rsmUes, err := c.GetRsmUEs(ctx)
 	if err != nil {
-		return uenib.RsmUeInfo{}, err
+		return uenib_api.RsmUeInfo{}, err
 	}
 
 	// for each RSM UEs checks connection technology (is nomenclature right?)
 	for _, rsmUE := range rsmUes {
 		switch preferredType {
-		case uenib.UeIdType_UE_ID_TYPE_CU_UE_F1_AP_ID:
+		case uenib_api.UeIdType_UE_ID_TYPE_CU_UE_F1_AP_ID:
 			if rsmUE.GetCuE2NodeId() == cuNodeID && rsmUE.GetUeIdList().GetCuUeF1apID().Value == ueConnectionTypeID {
 				result = *rsmUE
 				hasUE = true
 			}
-		case uenib.UeIdType_UE_ID_TYPE_DU_UE_F1_AP_ID:
+		case uenib_api.UeIdType_UE_ID_TYPE_DU_UE_F1_AP_ID:
 			if rsmUE.GetCuE2NodeId() == cuNodeID && rsmUE.GetUeIdList().GetDuUeF1apID().Value == ueConnectionTypeID {
 				result = *rsmUE
 				hasUE = true
 			}
-		case uenib.UeIdType_UE_ID_TYPE_RAN_UE_NGAP_ID:
+		case uenib_api.UeIdType_UE_ID_TYPE_RAN_UE_NGAP_ID:
 			if rsmUE.GetCuE2NodeId() == cuNodeID && rsmUE.GetUeIdList().GetRANUeNgapID().Value == ueConnectionTypeID {
 				result = *rsmUE
 				hasUE = true
 			}
-		case uenib.UeIdType_UE_ID_TYPE_AMF_UE_NGAP_ID:
+		case uenib_api.UeIdType_UE_ID_TYPE_AMF_UE_NGAP_ID:
 			if rsmUE.GetCuE2NodeId() == cuNodeID && rsmUE.GetUeIdList().GetAMFUeNgapID().Value == ueConnectionTypeID {
 				result = *rsmUE
 				hasUE = true
 			}
-		case uenib.UeIdType_UE_ID_TYPE_ENB_UE_S1_AP_ID:
+		case uenib_api.UeIdType_UE_ID_TYPE_ENB_UE_S1_AP_ID:
 			if rsmUE.GetCuE2NodeId() == cuNodeID && rsmUE.GetUeIdList().GetEnbUeS1apID().Value == int32(ueConnectionTypeID) {
 				result = *rsmUE
 				hasUE = true
 			}
 		default:
-			return uenib.RsmUeInfo{}, errors.NewNotSupported(fmt.Sprintf("ID type %v is not allowed", preferredType.String()))
+			return uenib_api.RsmUeInfo{}, errors.NewNotSupported(fmt.Sprintf("ID type %v is not allowed", preferredType.String()))
 		}
 	}
 
 	// checks if UE was not found
 	if !hasUE {
-		return uenib.RsmUeInfo{}, errors.NewNotFound(fmt.Sprintf("UE Connection %v, with ID %v, does not exist in CU %v", preferredType.String(), ueConnectionTypeID, cuNodeID))
+		return uenib_api.RsmUeInfo{}, errors.NewNotFound(fmt.Sprintf("UE Connection %v, with ID %v, does not exist in CU %v", preferredType.String(), ueConnectionTypeID, cuNodeID))
 	}
 	return result, nil
 }
