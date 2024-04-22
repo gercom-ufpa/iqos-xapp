@@ -74,7 +74,7 @@ func (m *Manager) watchE2Connections(ctx context.Context) error {
 	for topoEvent := range ch {
 		log.Debugf("Received topo event: type %v, message %v", topoEvent.Type, topoEvent)
 		switch topoEvent.Type {
-		case topoapi.EventType_ADDED, topoapi.EventType_NONE: // Added or existing E2Node
+		case topoapi.EventType_ADDED, topoapi.EventType_NONE: // Added or existing E2 Node event
 			relation := topoEvent.Object.Obj.(*topoapi.Object_Relation) // gets relation
 			e2NodeID := relation.Relation.TgtEntityID                   // get target ID (E2NodeID) by relation
 			// check if E2Node has RSM Function/SM
@@ -103,9 +103,56 @@ func (m *Manager) watchE2Connections(ctx context.Context) error {
 							log.Warn(err)
 						}
 					}()
+				case topoapi.E2SmRsmCommand_E2_SM_RSM_COMMAND_SLICE_CREATE:
+					m.CtrlReqChsSliceCreate[string(e2NodeID)] = make(chan *CtrlMsg)
+					go m.watchCtrlSliceCreated(ctx, e2NodeID) // watch slice creation requests
+				case topoapi.E2SmRsmCommand_E2_SM_RSM_COMMAND_SLICE_UPDATE:
+					m.CtrlReqChsSliceUpdate[string(e2NodeID)] = make(chan *CtrlMsg)
+					go m.watchCtrlSliceUpdated(ctx, e2NodeID) // watch slice update requests
+				case topoapi.E2SmRsmCommand_E2_SM_RSM_COMMAND_SLICE_DELETE:
+					m.CtrlReqChsSliceDelete[string(e2NodeID)] = make(chan *CtrlMsg)
+					go m.watchCtrlSliceDeleted(ctx, e2NodeID) // watch slice delete requests
+				case topoapi.E2SmRsmCommand_E2_SM_RSM_COMMAND_UE_ASSOCIATE:
+					m.CtrlReqChsUeAssociate[string(e2NodeID)] = make(chan *CtrlMsg)
+					go m.watchCtrlUEAssociate(ctx, e2NodeID) // watch UE membership requests in slice
 				}
 			}
-		} // TODO: Add others cases
+
+		case topoapi.EventType_REMOVED: // E2 node removal event
+			relation := topoEvent.Object.Obj.(*topoapi.Object_Relation)
+			e2NodeID := relation.Relation.TgtEntityID
+			if !m.rnibClient.HasRANFunction(ctx, e2NodeID, smRsmOID) { // checks if the E2 Node has rsm RAN func
+				log.Debugf("Received topo event does not have RSM RAN function - %v", topoEvent)
+				continue
+			}
+
+			log.Infof("E2 node %v is disconnected", e2NodeID)
+			// Clean up slice information from onos-topo
+			duE2NodeID, err := m.rnibClient.GetTargetDUE2NodeID(ctx, e2NodeID)
+			hasDU := true
+			if err != nil {
+				log.Debugf("e2Node %v was not connected to DU - maybe e2Node %v is DU", e2NodeID, e2NodeID)
+				hasDU = false
+			}
+
+			if hasDU { // DU founded
+				err = m.rnibClient.DeleteRsmSliceList(ctx, duE2NodeID) // deletes DU's slices
+				if err != nil {
+					log.Warn(err)
+				}
+			} else {
+				err = m.rnibClient.DeleteRsmSliceList(ctx, e2NodeID) // deletes DU's slices
+				if err != nil {
+					log.Warn(err)
+				}
+			}
+
+			// Clean up UE information from uenib
+			err = m.uenibClient.DeleteUEWithE2NodeID(ctx, string(e2NodeID))
+			if err != nil {
+				log.Warn(err)
+			}
+		}
 	}
 	return nil
 }
@@ -253,4 +300,133 @@ func (m *Manager) sendIndicationOnStream(streamID broker.StreamID, ch chan e2api
 			return
 		}
 	}
+}
+
+// Watches slice creation events
+func (m *Manager) watchCtrlSliceCreated(ctx context.Context, e2NodeID topoapi.ID) {
+	for ctrlReqMsg := range m.CtrlReqChsSliceCreate[e2NodeID.String()] { // get slice creation requests
+		log.Debugf("ctrlReqMsg: %v", ctrlReqMsg)
+		e2Node := m.e2Client.Node(e2client.NodeID(e2NodeID))
+		ctrlRespMsg, err := e2Node.Control(ctx, ctrlReqMsg.CtrlMsg, nil) // response msg
+		if err != nil {                                                  // error to get response msg
+			log.Warnf("Error sending control message - %v", err)
+			ack := Ack{
+				Success: false,
+				Reason:  err.Error(),
+			}
+			ctrlReqMsg.AckCh <- ack
+			continue
+		} else if ctrlRespMsg == nil { // msg is nil
+			log.Warn(" Ctrl Resp message is nil")
+			ack := Ack{
+				Success: false,
+				Reason:  "Ctrl Resp message is nil",
+			}
+			ctrlReqMsg.AckCh <- ack
+			continue
+		} else { // msg received
+			ack := Ack{
+				Success: true,
+			}
+			ctrlReqMsg.AckCh <- ack // send ack to channel
+		}
+	}
+}
+
+// Watches slice updates events
+func (m *Manager) watchCtrlSliceUpdated(ctx context.Context, e2NodeID topoapi.ID) {
+	for ctrlReqMsg := range m.CtrlReqChsSliceUpdate[string(e2NodeID)] { // get slice update requests
+		log.Debugf("ctrlReqMsg: %v", ctrlReqMsg)
+		e2Node := m.e2Client.Node(e2client.NodeID(e2NodeID))
+		ctrlRespMsg, err := e2Node.Control(ctx, ctrlReqMsg.CtrlMsg, nil) // response msg
+		log.Debugf("ctrlRespMsg: %v", ctrlRespMsg)
+		if err != nil { // error to get response msg
+			log.Warnf("Error sending control message - %v", err)
+			ack := Ack{
+				Success: false,
+				Reason:  err.Error(),
+			}
+			ctrlReqMsg.AckCh <- ack
+			continue
+		} else if ctrlRespMsg == nil { // response msg is nil
+			log.Warn(" Ctrl Resp message is nil")
+			ack := Ack{
+				Success: false,
+				Reason:  "Ctrl Resp message is nil",
+			}
+			ctrlReqMsg.AckCh <- ack
+			continue
+		}
+		ack := Ack{
+			Success: true,
+		}
+		ctrlReqMsg.AckCh <- ack // sends ack to channel
+	}
+}
+
+// Watches slice delete events
+func (m *Manager) watchCtrlSliceDeleted(ctx context.Context, e2NodeID topoapi.ID) {
+	for ctrlReqMsg := range m.CtrlReqChsSliceDelete[string(e2NodeID)] { // get slice delete requests
+		log.Debugf("ctrlReqMsg: %v", ctrlReqMsg)
+		e2Node := m.e2Client.Node(e2client.NodeID(e2NodeID))
+		ctrlRespMsg, err := e2Node.Control(ctx, ctrlReqMsg.CtrlMsg, nil) // response msg
+		log.Debugf("ctrlRespMsg: %v", ctrlRespMsg)
+		if err != nil { // error to get response msg
+			log.Warnf("Error sending control message - %v", err)
+			ack := Ack{
+				Success: false,
+				Reason:  err.Error(),
+			}
+			ctrlReqMsg.AckCh <- ack
+			continue
+		} else if ctrlRespMsg == nil { // response msg is nil
+			log.Warn(" Ctrl Resp message is nil")
+			ack := Ack{
+				Success: false,
+				Reason:  "Ctrl Resp message is nil",
+			}
+			ctrlReqMsg.AckCh <- ack
+			continue
+		}
+		ack := Ack{
+			Success: true,
+		}
+		ctrlReqMsg.AckCh <- ack // sends ack to channel
+	}
+}
+
+// Watches UE association events to the slice
+func (m *Manager) watchCtrlUEAssociate(ctx context.Context, e2NodeID topoapi.ID) {
+	for ctrlReqMsg := range m.CtrlReqChsUeAssociate[string(e2NodeID)] { // get slice delete requests
+		log.Debugf("ctrlReqMsg: %v", ctrlReqMsg)
+		e2Node := m.e2Client.Node(e2client.NodeID(e2NodeID))
+		ctrlRespMsg, err := e2Node.Control(ctx, ctrlReqMsg.CtrlMsg, nil) // response msg
+		log.Debugf("ctrlRespMsg: %v", ctrlRespMsg)
+		if err != nil { // error to get response msg
+			log.Warnf("Error sending control message - %v", err)
+			ack := Ack{
+				Success: false,
+				Reason:  err.Error(),
+			}
+			ctrlReqMsg.AckCh <- ack
+			continue
+		} else if ctrlRespMsg == nil { // response msg is nil
+			log.Warn(" Ctrl Resp message is nil")
+			ack := Ack{
+				Success: false,
+				Reason:  "Ctrl Resp message is nil",
+			}
+			ctrlReqMsg.AckCh <- ack
+			continue
+		}
+		ack := Ack{
+			Success: true,
+		}
+		ctrlReqMsg.AckCh <- ack // sends ack to channel
+	}
+}
+
+func (m *Manager) Stop() error {
+	// TODO: delete subscriptions and data created by xApp
+	panic("implement me")
 }
