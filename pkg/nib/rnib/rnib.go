@@ -112,6 +112,18 @@ func (c *Client) GetRsmSliceItemAspects(ctx context.Context, nodeID topoapi.ID) 
 	return rsmSliceList.GetRsmSliceList(), nil
 }
 
+func (t *Client) UpdateRsmSliceItemAspect(ctx context.Context, nodeID topoapi.ID, msg *topoapi.RSMSlicingItem) error {
+	err := t.DeleteRsmSliceItemAspect(ctx, nodeID, msg.GetID())
+	if err != nil {
+		return err
+	}
+	err = t.AddRsmSliceItemAspect(ctx, nodeID, msg)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 // Gets RsmSliceItemList aspect on Node | return RsmSliceItemList aspect per slice
 func (c *Client) GetRsmSliceListAspect(ctx context.Context, nodeID topoapi.ID) (*topoapi.RSMSliceItemList, error) {
 	// gets a topo object by ID

@@ -1,10 +1,10 @@
 package slicing
 
 import (
-	"github.com/onosproject/onos-rsm/pkg/nib/rnib"
-	"github.com/onosproject/onos-rsm/pkg/nib/uenib"
-	"github.com/onosproject/onos-rsm/pkg/northbound"    // todo: create pkg/northbound
-	"github.com/onosproject/onos-rsm/pkg/southbound/e2" // todo: modify pkg/southbound
+	"github.com/gercom-ufpa/iqos-xapp/pkg/nib/rnib"
+	"github.com/gercom-ufpa/iqos-xapp/pkg/nib/uenib"
+	"github.com/gercom-ufpa/iqos-xapp/pkg/northbound"    // todo: create pkg/northbound
+	"github.com/gercom-ufpa/iqos-xapp/pkg/southbound/e2" // todo: modify pkg/southbound
 )
 
 type Manager struct {
@@ -13,7 +13,7 @@ type Manager struct {
 	ctrlReqChsSliceUpdate map[string]chan *e2.CtrlMsg
 	ctrlReqChsSliceDelete map[string]chan *e2.CtrlMsg
 	ctrlReqChsUeAssociate map[string]chan *e2.CtrlMsg
-	rnibClient            rnib.TopoClient
+	rnibClient            rnib.Client
 	uenibClient           uenib.Client
 	ctrlMsgHandler        e2.ControlMessageHandler
 	ackTimer              int
@@ -38,7 +38,7 @@ type Channels struct {
 }
 
 type AppOptions struct {
-	RnibClient rnib.TopoClient
+	RnibClient rnib.Client
 
 	UenibClient uenib.Client
 
@@ -81,7 +81,7 @@ func WithNbiReqChs(rsmMsgCh chan *northbound.RsmMsg) Option {
 	})
 }
 
-func WithRnibClient(rnibClient rnib.TopoClient) Option {
+func WithRnibClient(rnibClient rnib.Client) Option {
 	return newOption(func(options *Options) {
 		options.App.RnibClient = rnibClient
 	})

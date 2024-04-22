@@ -6,14 +6,14 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/gercom-ufpa/iqos-xapp/pkg/northbound"
+	"github.com/gercom-ufpa/iqos-xapp/pkg/southbound/e2"
 	rsmapi "github.com/onosproject/onos-api/go/onos/rsm"
 	topoapi "github.com/onosproject/onos-api/go/onos/topo"
 	uenib_api "github.com/onosproject/onos-api/go/onos/uenib" // used by delete func
 	e2sm_rsm "github.com/onosproject/onos-e2-sm/servicemodels/e2sm_rsm/v1/e2sm-rsm-ies"
 	e2sm_v2_ies "github.com/onosproject/onos-e2-sm/servicemodels/e2sm_rsm/v1/e2sm-v2-ies"
 	"github.com/onosproject/onos-lib-go/pkg/logging"
-	"github.com/onosproject/onos-rsm/pkg/northbound"    // TODO
-	"github.com/onosproject/onos-rsm/pkg/southbound/e2" // TODO
 )
 
 var log = logging.GetLogger("iqos-xapp", "slicemgr")
@@ -56,8 +56,8 @@ func (m *Manager) DispatchNbiMsg(ctx context.Context) {
 			err = m.handleNbiUpdateSliceRequest(ctx, msg.Message.(*rsmapi.UpdateSliceRequest), msg.NodeID)
 		case *rsmapi.DeleteSliceRequest:
 			err = m.handleNbiDeleteSliceRequest(ctx, msg.Message.(*rsmapi.DeleteSliceRequest), msg.NodeID)
-		//case *rsmapi.SetUeSliceAssociationRequest:
-		//	err = m.handleNbiSetUeSliceAssociationRequest(ctx, msg.Message.(*rsmapi.SetUeSliceAssociationRequest), msg.NodeID)
+		case *rsmapi.SetUeSliceAssociationRequest:
+			err = m.handleNbiSetUeSliceAssociationRequest(ctx, msg.Message.(*rsmapi.SetUeSliceAssociationRequest), msg.NodeID)
 		default:
 			err = fmt.Errorf("unknown msg type: %v", msg)
 		}
@@ -240,7 +240,7 @@ func (m *Manager) handleNbiDeleteSliceRequest(ctx context.Context, req *rsmapi.D
 		return fmt.Errorf("failed to delete slice information to onos-topo although control message was sent: %v", err)
 	}
 
-	ues, err := m.uenibClient.GetUEs(ctx) // try get a list of UEs registered in UENIB
+	ues, err := m.uenibClient.GetRsmUEs(ctx) // try get a list of UEs registered in UENIB
 	if err != nil {
 		return fmt.Errorf("failed to get UEs in UENIB: %v", err) // error getting
 	}
@@ -255,7 +255,7 @@ func (m *Manager) handleNbiDeleteSliceRequest(ctx context.Context, req *rsmapi.D
 			}
 		}
 		if changed {
-			err = m.uenibClient.UpdateUE(ctx, ues[i]) // return a error if wasn't possible update UE's data
+			err = m.uenibClient.UpdateRsmUE(ctx, ues[i]) // return a error if wasn't possible update UE's data
 			if err != nil {
 				return fmt.Errorf("failed to update UENIB: %v", err)
 			}
@@ -372,7 +372,7 @@ func (m *Manager) handleNbiUpdateSliceRequest(ctx context.Context, req *rsmapi.U
 		return fmt.Errorf("failed to update slice information to onos-topo although control message was sent: %v", err)
 	}
 
-	ues, err := m.uenibClient.GetUEs(ctx) // try get a list of UEs registered in UENIB client
+	ues, err := m.uenibClient.GetRsmUEs(ctx) // try get a list of UEs registered in UENIB client
 	if err != nil {
 		return fmt.Errorf("failed to get UEs in UENIB: %v", err) // error getting
 	}
@@ -387,7 +387,7 @@ func (m *Manager) handleNbiUpdateSliceRequest(ctx context.Context, req *rsmapi.U
 			}
 		}
 		if changed {
-			err = m.uenibClient.UpdateUE(ctx, ues[i]) // return a error if wasn't possible update UE's data
+			err = m.uenibClient.UpdateRsmUE(ctx, ues[i]) // return a error if wasn't possible update UE's data
 			if err != nil {
 				return fmt.Errorf("failed to update UENIB: %v", err)
 			}
@@ -493,7 +493,7 @@ func (m *Manager) handleNbiSetUeSliceAssociationRequest(ctx context.Context, req
 		},
 	}
 
-	rsmUEInfo, err := m.uenibClient.GetUEWithPreferredID(ctx, string(cuNodeID), uenib_api.UeIdType_UE_ID_TYPE_DU_UE_F1_AP_ID, DuUeF1apID)
+	rsmUEInfo, err := m.uenibClient.GetRsmUEWithPreferredID(ctx, string(cuNodeID), uenib_api.UeIdType_UE_ID_TYPE_DU_UE_F1_AP_ID, DuUeF1apID)
 	if err != nil {
 		return fmt.Errorf("failed to get UENIB UE info (CuID %v DUID %v UEID %v): err: %v", cuNodeID, duNodeID, ueID, err)
 	}
@@ -622,7 +622,7 @@ func (m *Manager) handleNbiSetUeSliceAssociationRequest(ctx context.Context, req
 		}
 	}
 
-	err = m.uenibClient.UpdateUE(ctx, rsmUEInfo)
+	err = m.uenibClient.UpdateRsmUE(ctx, &rsmUEInfo)
 	if err != nil {
 		return fmt.Errorf("tried to update du e2node ID on uenib (because there was no du ID) but failed to update du id UENIB UE info (CuID %v DUID %v UEID %v uenib UE info %v): err: %v", cuNodeID, duNodeID, ueID, rsmUEInfo, err)
 	}
@@ -849,7 +849,7 @@ func (m *Manager) handleNbiSetUeSliceAssociationRequest(ctx context.Context, req
 
 			rsmUEInfo.SliceList = append(rsmUEInfo.SliceList, sliceInfo)
 		}
-		err = m.uenibClient.UpdateUE(ctx, rsmUEInfo)
+		err = m.uenibClient.UpdateRsmUE(ctx, &rsmUEInfo)
 		if err != nil {
 			return fmt.Errorf("Failed to update uenib: %v", err)
 		}
@@ -953,7 +953,7 @@ func (m *Manager) handleNbiSetUeSliceAssociationRequest(ctx context.Context, req
 
 		rsmUEInfo.SliceList = append(rsmUEInfo.SliceList, sliceInfo)
 
-		err = m.uenibClient.UpdateUE(ctx, rsmUEInfo)
+		err = m.uenibClient.UpdateRsmUE(ctx, &rsmUEInfo)
 		if err != nil {
 			return fmt.Errorf("Failed to update uenib: %v", err)
 		}

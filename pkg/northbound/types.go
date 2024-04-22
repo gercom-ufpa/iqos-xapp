@@ -5,9 +5,9 @@
 package northbound
 
 import (
+	"github.com/gercom-ufpa/iqos-xapp/pkg/nib/rnib"
+	"github.com/gercom-ufpa/iqos-xapp/pkg/nib/uenib"
 	topoapi "github.com/onosproject/onos-api/go/onos/topo"
-	"github.com/onosproject/onos-rsm/pkg/nib/rnib"
-	"github.com/onosproject/onos-rsm/pkg/nib/uenib"
 )
 
 // Confirmation message for an operation, containing a boolean
@@ -29,14 +29,14 @@ type RsmMsg struct {
 // This Service struct encapsulates the clients for rnib and uenib, as well as a channel
 // for receiving RSM messages. It is intended to be used to provide RSM-related services.
 type Service struct {
-	rnibClient  rnib.TopoClient
+	rnibClient  rnib.Client
 	uenibClient uenib.Client
 	rsmReqCh    chan *RsmMsg
 }
 
 // Create a gRPC server to serve RPC requests
 type Server struct {
-	rnibClient  rnib.TopoClient
+	rnibClient  rnib.Client
 	uenibClient uenib.Client
 	rsmReqCh    chan *RsmMsg
 }

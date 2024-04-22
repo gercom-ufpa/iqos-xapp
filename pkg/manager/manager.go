@@ -7,8 +7,11 @@ import (
 	appConfig "github.com/gercom-ufpa/iqos-xapp/pkg/config"
 	"github.com/gercom-ufpa/iqos-xapp/pkg/nib/rnib"
 	"github.com/gercom-ufpa/iqos-xapp/pkg/nib/uenib"
+	nbi "github.com/gercom-ufpa/iqos-xapp/pkg/northbound"
+	"github.com/gercom-ufpa/iqos-xapp/pkg/slicing"
 	"github.com/gercom-ufpa/iqos-xapp/pkg/southbound/e2"
 	"github.com/onosproject/onos-lib-go/pkg/logging"
+	"github.com/onosproject/onos-lib-go/pkg/northbound"
 )
 
 // log initialize
@@ -45,6 +48,8 @@ func NewManager(config Config) *Manager {
 		log.Warn(err)
 	}
 
+	rsmReqCh := make(chan *nbi.RsmMsg)
+
 	// Control messages used by the e2 and slicemgr packages
 	slicingCtrlMsgs := e2.SlicingCtrlMsgs{
 		CtrlReqChsSliceCreate: make(map[string]chan *e2.CtrlMsg),
@@ -53,6 +58,13 @@ func NewManager(config Config) *Manager {
 		CtrlReqChsUeAssociate: make(map[string]chan *e2.CtrlMsg),
 	}
 
+	slicingManager := slicing.NewManager(
+		slicing.WithRnibClient(rnibClient),
+		slicing.WithUenibClient(uenibClient),
+		slicing.WithCtrlReqChs(slicingCtrlMsgs.CtrlReqChsSliceCreate, slicingCtrlMsgs.CtrlReqChsSliceUpdate, slicingCtrlMsgs.CtrlReqChsSliceDelete, slicingCtrlMsgs.CtrlReqChsUeAssociate),
+		slicing.WithNbiReqChs(rsmReqCh),
+		slicing.WithAckTimer(config.AckTimer),
+	)
 	// Creates App Managers
 
 	// A1 Manager (or client?? - TODO)
@@ -87,11 +99,13 @@ func NewManager(config Config) *Manager {
 
 	// App Manager
 	manager := &Manager{
-		appConfig:   appCfg,
-		config:      config,
-		E2Manager:   e2Manager,
-		UenibClient: uenibClient,
-		RnibClient:  rnibClient,
+		appConfig:      appCfg,
+		config:         config,
+		E2Manager:      e2Manager,
+		SlicingManager: slicingManager,
+		UenibClient:    uenibClient,
+		RnibClient:     rnibClient,
+		RsmReqCh:       rsmReqCh,
 	}
 
 	return manager
@@ -106,14 +120,23 @@ func (mgr *Manager) Run() {
 
 // starts xAPP processes
 func (mgr *Manager) start() error {
+
+	// starts Northbound server
+	err := mgr.startNorthboundServer()
+	if err != nil {
+		log.Warn(err)
+		return err
+	}
+
 	// starts E2 subscriptions
-	err := mgr.E2Manager.Start() // TODO
+	err = mgr.E2Manager.Start() // TODO
 	if err != nil {
 		log.Warnf("Fail to start E2 Manager: %v", err)
 		return err
 	}
 
 	// starts Slice Module (TODO)
+	go mgr.SlicingManager.Run(context.Background())
 
 	return nil
 }
@@ -122,4 +145,28 @@ func (mgr *Manager) start() error {
 func (m *Manager) Close() {
 	// TODO
 	// syscall.Kill(syscall.Getpid(), syscall.SIGINT)
+}
+
+func (mgr *Manager) startNorthboundServer() error {
+	s := northbound.NewServer(northbound.NewServerCfg(
+		mgr.config.CAPath,
+		mgr.config.KeyPath,
+		mgr.config.CertPath,
+		int16(mgr.config.GRPCPort),
+		true,
+		northbound.SecurityConfig{}))
+
+	s.AddService(nbi.NewService(mgr.RnibClient, mgr.UenibClient, mgr.RsmReqCh))
+
+	doneCh := make(chan error)
+	go func() {
+		err := s.Serve(func(started string) {
+			log.Info("Started NBI on ", started)
+			close(doneCh)
+		})
+		if err != nil {
+			doneCh <- err
+		}
+	}()
+	return <-doneCh
 }

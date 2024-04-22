@@ -6,21 +6,24 @@ package northbound
 
 import (
 	"context"
+
+	"github.com/gercom-ufpa/iqos-xapp/pkg/nib/rnib"
+	"github.com/gercom-ufpa/iqos-xapp/pkg/nib/uenib"
 	rsmapi "github.com/onosproject/onos-api/go/onos/rsm"
 	topoapi "github.com/onosproject/onos-api/go/onos/topo"
 	"github.com/onosproject/onos-lib-go/pkg/logging/service"
-	"github.com/onosproject/onos-rsm/pkg/nib/rnib"
-	"github.com/onosproject/onos-rsm/pkg/nib/uenib"
 	"google.golang.org/grpc"
 )
-//Creates a new service with the provided clients and the RSM messaging channel.
-func NewService(rnibClient rnib.TopoClient, uenibClient uenib.Client, rsmReqCh chan *RsmMsg) service.Service {
+
+// Creates a new service with the provided clients and the RSM messaging channel.
+func NewService(rnibClient rnib.Client, uenibClient uenib.Client, rsmReqCh chan *RsmMsg) service.Service {
 	return &Service{
 		rnibClient:  rnibClient,
 		uenibClient: uenibClient,
 		rsmReqCh:    rsmReqCh,
 	}
 }
+
 // Register registers the service on the provided gRPC server.
 func (s Service) Register(r *grpc.Server) {
 	server := &Server{
@@ -30,7 +33,8 @@ func (s Service) Register(r *grpc.Server) {
 	}
 	rsmapi.RegisterRsmServer(r, server)
 }
-//Creates a new slice using the given parameters.
+
+// Creates a new slice using the given parameters.
 func (s Server) CreateSlice(_ context.Context, request *rsmapi.CreateSliceRequest) (*rsmapi.CreateSliceResponse, error) {
 	// Create a confirmation channel.
 	ackCh := make(chan Ack)
@@ -44,7 +48,7 @@ func (s Server) CreateSlice(_ context.Context, request *rsmapi.CreateSliceReques
 	go func(msg *RsmMsg) {
 		s.rsmReqCh <- msg
 	}(msg)
-    // Wait for confirmation of the operation.
+	// Wait for confirmation of the operation.
 	ack := <-ackCh
 	// Returns the response.
 	return &rsmapi.CreateSliceResponse{

@@ -221,8 +221,6 @@ github.com/onosproject/onos-lib-go v0.10.24 h1:CX/6a0U2ZAhHeYiZnmO+kOIoLv8V+aim0
 github.com/onosproject/onos-lib-go v0.10.24/go.mod h1:xprZr/FtQ8YhDxA3WI7AqMUzK97QJvrsrrmY5KiX46I=
 github.com/onosproject/onos-ric-sdk-go v0.8.12 h1:aT6gevAeJ58/mkxzY/LDceyfKsik3DwIstsrVqyMEuY=
 github.com/onosproject/onos-ric-sdk-go v0.8.12/go.mod h1:/UMaxqFFzwxG7iBNquZKKM7o5mCNMppAoIkvjCQh0mE=
-github.com/onosproject/onos-rsm v0.2.5 h1:21LSicrnpu4cP8bSJ7KUcY09wHdb+6JwGcwvjK0u2eo=
-github.com/onosproject/onos-rsm v0.2.5/go.mod h1:m6FlTFuRBy5pDmDhTZ40rY55JpUEjzM9n7Uf/NUMong=
 github.com/openconfig/gnmi v0.9.1 h1:hVOdLTaRjdy68oCGJbkf2vrmnUoQ5xbINqBOAMix4xM=
 github.com/openconfig/gnmi v0.9.1/go.mod h1:Y9os75GmSkhHw2wX8sMsxfI7qRGAEcDh8NTa5a8vj6E=
 github.com/opentracing/opentracing-go v1.1.0/go.mod h1:UkNAQd3GIcIGf0SeVgPpRdFStlNbqXla1AfSYxPUl2o=
