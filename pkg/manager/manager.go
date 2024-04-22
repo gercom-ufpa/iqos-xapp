@@ -129,7 +129,7 @@ func (mgr *Manager) start() error {
 	}
 
 	// starts E2 subscriptions
-	err = mgr.E2Manager.Start() // TODO
+	err = mgr.E2Manager.Start()
 	if err != nil {
 		log.Warnf("Fail to start E2 Manager: %v", err)
 		return err
@@ -142,7 +142,7 @@ func (mgr *Manager) start() error {
 }
 
 // finalizes xApp processes
-func (m *Manager) Close() {
+func (mgr *Manager) Close() {
 	// TODO
 	// syscall.Kill(syscall.Getpid(), syscall.SIGINT)
 }

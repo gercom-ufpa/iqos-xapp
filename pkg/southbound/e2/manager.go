@@ -22,7 +22,7 @@ import (
 var log = logging.GetLogger("iqos-xapp", "e2")
 
 func NewManager(config Config) (Manager, error) {
-	log.SetLevel(logging.DebugLevel) // TODO: remove me in production
+	log.SetLevel(logging.DebugLevel) // To debug
 	// creates a E2 Client
 	e2Client := e2client.NewClient(
 		e2client.WithAppID(e2client.AppID(config.AppID)),
@@ -194,6 +194,7 @@ func (m *Manager) createSubscription(ctx context.Context, e2nodeID topoapi.ID, e
 
 	// subscribe on E2 Node
 	channelID, err := e2Node.Subscribe(ctx, subName, subSpec, ch)
+	log.Debug("Subscription Channel ID: %v", channelID)
 	if err != nil {
 		log.Warn(err)
 		return err
@@ -350,7 +351,7 @@ func (m *Manager) watchCtrlSliceUpdated(ctx context.Context, e2NodeID topoapi.ID
 			ctrlReqMsg.AckCh <- ack
 			continue
 		} else if ctrlRespMsg == nil { // response msg is nil
-			log.Warn(" Ctrl Resp message is nil")
+			log.Warn("Ctrl Resp message is nil")
 			ack := Ack{
 				Success: false,
 				Reason:  "Ctrl Resp message is nil",
