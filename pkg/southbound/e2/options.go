@@ -67,3 +67,7 @@ type SlicingCtrlMsgs struct {
 	CtrlReqChsSliceDelete map[string]chan *CtrlMsg
 	CtrlReqChsUeAssociate map[string]chan *CtrlMsg
 }
+
+// ControlMessageHandler is a struct to handle control message
+type ControlMessageHandler struct {
+}
