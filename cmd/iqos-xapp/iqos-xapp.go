@@ -28,6 +28,7 @@ func main() {
 		ConfigPath:    "/etc/iqos-xapp/config/config.json",
 		E2tEndpoint:   "onos-e2t",
 		E2tPort:       5150,
+		GRPCPort:      5150,
 		TopoEndpoint:  "onos-topo",
 		TopoPort:      5150,
 		UeNibEndpoint: "onos-uenib",

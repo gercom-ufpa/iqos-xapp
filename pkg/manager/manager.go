@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/gercom-ufpa/iqos-xapp/pkg/broker"
+	"github.com/gercom-ufpa/iqos-xapp/pkg/clientv"
 	appConfig "github.com/gercom-ufpa/iqos-xapp/pkg/config"
 	"github.com/gercom-ufpa/iqos-xapp/pkg/nib/rnib"
 	"github.com/gercom-ufpa/iqos-xapp/pkg/nib/uenib"
@@ -66,7 +67,6 @@ func NewManager(config Config) *Manager {
 		slicing.WithAckTimer(config.AckTimer),
 	)
 	// Creates App Managers
-
 	// A1 Manager (or client?? - TODO)
 
 	// E2 manager
@@ -129,7 +129,7 @@ func (mgr *Manager) start() error {
 	}
 
 	// starts E2 subscriptions
-	err = mgr.E2Manager.Start()
+	err = mgr.E2Manager.Start() // TODO
 	if err != nil {
 		log.Warnf("Fail to start E2 Manager: %v", err)
 		return err
@@ -138,6 +138,12 @@ func (mgr *Manager) start() error {
 	// starts Slice Module (TODO)
 	go mgr.SlicingManager.Run(context.Background())
 
+	err = mgr.StartClient()
+	if err != nil {
+		log.Warnf("Fail to start Client: %v", err)
+		return err
+	}
+	// starts Slice Module (TODO)*/
 	return nil
 }
 
@@ -169,4 +175,30 @@ func (mgr *Manager) startNorthboundServer() error {
 		}
 	}()
 	return <-doneCh
+}
+func (mgr *Manager) StartClient() error {
+	e2nodeid, err := mgr.appConfig.GetE2NodeId()
+	if err != nil {
+		return err
+	}
+	sliceid, err := mgr.appConfig.GetSliceID()
+	if err != nil {
+		return err
+	}
+	scheduler, err := mgr.appConfig.GetScheduler()
+	if err != nil {
+		return err
+	}
+	weight, err := mgr.appConfig.GetWeight()
+	if err != nil {
+		return err
+	}
+	slicetype, err := mgr.appConfig.GetType()
+	if err != nil {
+		return err
+	}
+
+	clientv.CmdCreateSlice(e2nodeid, sliceid, scheduler, weight, slicetype)
+
+	return err
 }

@@ -37,8 +37,10 @@ func (s Service) Register(r *grpc.Server) {
 // Creates a new slice using the given parameters.
 func (s Server) CreateSlice(_ context.Context, request *rsmapi.CreateSliceRequest) (*rsmapi.CreateSliceResponse, error) {
 	// Create a confirmation channel.
+
 	ackCh := make(chan Ack)
 	// Creates an RSM message.
+
 	msg := &RsmMsg{
 		NodeID:  topoapi.ID(request.E2NodeId),
 		Message: request,

@@ -56,3 +56,60 @@ func (c *AppConfig) GetGranularityPeriod() (uint64, error) {
 	}
 	return val, nil
 }
+
+func (c *AppConfig) GetE2NodeId() (string, error) {
+	e2nodeid, _ := c.appConfig.Get(E2nodeIDConfigPath)
+	val, err := configutils.ToString(e2nodeid.Value)
+	if err != nil {
+		log.Error(err)
+		return "", err
+	}
+	return val, nil
+}
+
+// gets granularity period
+func (c *AppConfig) GetScheduler() (string, error) {
+	scheduler, _ := c.appConfig.Get(SchedulerConfigPath)
+	val, err := configutils.ToString(scheduler.Value)
+	if err != nil {
+		log.Error(err)
+		return "", err
+	}
+
+	return val, nil
+}
+
+func (c *AppConfig) GetType() (string, error) {
+	slicetype, _ := c.appConfig.Get(SliceTypeConfigPath)
+	val, err := configutils.ToString(slicetype.Value)
+	if err != nil {
+		log.Error(err)
+		return "", err
+	}
+
+	return val, nil
+}
+
+func (c *AppConfig) GetSliceID() (uint64, error) {
+	sliceid, _ := c.appConfig.Get(SliceIDConfigPath)
+	val, err := configutils.ToUint64(sliceid.Value)
+
+	if err != nil {
+		log.Error(err)
+		return 0, err
+	}
+
+	return val, nil
+}
+
+func (c *AppConfig) GetWeight() (uint64, error) {
+	weight, _ := c.appConfig.Get(SliceIDConfigPath)
+	val, err := configutils.ToUint64(weight.Value)
+
+	if err != nil {
+		log.Error(err)
+		return 0, err
+	}
+
+	return val, nil
+}

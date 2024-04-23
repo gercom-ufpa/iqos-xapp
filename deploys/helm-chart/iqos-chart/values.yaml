@@ -26,7 +26,13 @@ config:
       reportPeriod:
         interval: 1000 # 1000 ms ??
         granularity: 1000 # 1000 ms ??
-      slices: # (TODO)
+      slice:
+        e2nodeid: "e2:4/e00/3/c8"
+        scheduler: "RR"
+        sliceid: 1
+        weight: 30
+        type: "DL"
+       
 
 resources: {}
   # limits:
