@@ -62,7 +62,7 @@ func (c *AppConfig) GetE2NodeId() (string, error) {
 	val, err := configutils.ToString(e2nodeid.Value)
 	if err != nil {
 		log.Error(err)
-		return "", err
+		return val, err
 	}
 	return val, nil
 }
@@ -73,7 +73,7 @@ func (c *AppConfig) GetScheduler() (string, error) {
 	val, err := configutils.ToString(scheduler.Value)
 	if err != nil {
 		log.Error(err)
-		return "", err
+		return val, err
 	}
 
 	return val, nil
@@ -84,7 +84,7 @@ func (c *AppConfig) GetType() (string, error) {
 	val, err := configutils.ToString(slicetype.Value)
 	if err != nil {
 		log.Error(err)
-		return "", err
+		return val, err
 	}
 
 	return val, nil
