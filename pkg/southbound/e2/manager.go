@@ -34,7 +34,7 @@ func NewManager(config Config) (Manager, error) {
 			e2client.ServiceModelName(config.ServiceModels.RsmSMName),
 			e2client.ServiceModelVersion(config.ServiceModels.RsmSMVersion),
 		),
-		e2client.WithEncoding(e2client.ASN1Encoding), // sets enconding
+		e2client.WithEncoding(e2client.ProtoEncoding), // sets enconding
 	)
 
 	return Manager{
