@@ -138,12 +138,12 @@ func (mgr *Manager) start() error {
 	// starts Slice Module (TODO)
 	go mgr.SlicingManager.Run(context.Background())
 
-	time.AfterFunc(120*time.Second, func() {
-		err := mgr.StartClient()
-		if err != nil {
-			log.Warnf("Falha ao iniciar o Cliente: %v", err)
-		}
-	})
+	// time.AfterFunc(120*time.Second, func() {
+	// 	err := mgr.StartClient()
+	// 	if err != nil {
+	// 		log.Warnf("Falha ao iniciar o Cliente: %v", err)
+	// 	}
+	// })
 	// starts Slice Module (TODO)*/
 	return nil
 }
@@ -177,29 +177,29 @@ func (mgr *Manager) startNorthboundServer() error {
 	}()
 	return <-doneCh
 }
-func (mgr *Manager) StartClient() error {
-	e2nodeid, err := mgr.appConfig.GetE2NodeId()
-	if err != nil {
-		return err
-	}
-	sliceid, err := mgr.appConfig.GetSliceID()
-	if err != nil {
-		return err
-	}
-	scheduler, err := mgr.appConfig.GetScheduler()
-	if err != nil {
-		return err
-	}
-	weight, err := mgr.appConfig.GetWeight()
-	if err != nil {
-		return err
-	}
-	slicetype, err := mgr.appConfig.GetType()
-	if err != nil {
-		return err
-	}
+// func (mgr *Manager) StartClient() error {
+// 	e2nodeid, err := mgr.appConfig.GetE2NodeId()
+// 	if err != nil {
+// 		return err
+// 	}
+// 	sliceid, err := mgr.appConfig.GetSliceID()
+// 	if err != nil {
+// 		return err
+// 	}
+// 	scheduler, err := mgr.appConfig.GetScheduler()
+// 	if err != nil {
+// 		return err
+// 	}
+// 	weight, err := mgr.appConfig.GetWeight()
+// 	if err != nil {
+// 		return err
+// 	}
+// 	slicetype, err := mgr.appConfig.GetType()
+// 	if err != nil {
+// 		return err
+// 	}
 
-	clientv.CmdCreateSlice(e2nodeid, sliceid, scheduler, weight, slicetype)
+// 	clientv.CmdCreateSlice(e2nodeid, sliceid, scheduler, weight, slicetype)
 
-	return err
-}
+// 	return err
+// }
