@@ -4,7 +4,7 @@ import (
 	"context"
 	// "time"
 	"github.com/gercom-ufpa/iqos-xapp/pkg/broker"
-	"github.com/gercom-ufpa/iqos-xapp/pkg/clientv"
+	//"github.com/gercom-ufpa/iqos-xapp/pkg/clientv"
 	appConfig "github.com/gercom-ufpa/iqos-xapp/pkg/config"
 	"github.com/gercom-ufpa/iqos-xapp/pkg/nib/rnib"
 	"github.com/gercom-ufpa/iqos-xapp/pkg/nib/uenib"
@@ -177,6 +177,7 @@ func (mgr *Manager) startNorthboundServer() error {
 	}()
 	return <-doneCh
 }
+
 // func (mgr *Manager) StartClient() error {
 // 	e2nodeid, err := mgr.appConfig.GetE2NodeId()
 // 	if err != nil {
