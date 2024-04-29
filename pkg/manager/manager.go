@@ -138,7 +138,7 @@ func (mgr *Manager) start() error {
 	// starts Slice Module (TODO)
 	go mgr.SlicingManager.Run(context.Background())
 
-	time.AfterFunc(30*time.Second, func() {
+	time.AfterFunc(120*time.Second, func() {
 		err := mgr.StartClient()
 		if err != nil {
 			log.Warnf("Falha ao iniciar o Cliente: %v", err)
