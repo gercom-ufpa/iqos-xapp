@@ -306,7 +306,7 @@ func (m *Manager) sendIndicationOnStream(streamID broker.StreamID, ch chan e2api
 
 // Watches slice creation events
 func (m *Manager) watchCtrlSliceCreated(ctx context.Context, e2NodeID topoapi.ID) {
-	for ctrlReqMsg := range m.CtrlReqChsSliceCreate[e2NodeID.String()] { // get slice creation requests
+	for ctrlReqMsg := range m.CtrlReqChsSliceCreate[string(e2NodeID)] { // get slice creation requests
 		log.Debugf("ctrlReqMsg: %v", ctrlReqMsg)
 		e2Node := m.e2Client.Node(e2client.NodeID(e2NodeID))
 		ctrlRespMsg, err := e2Node.Control(ctx, ctrlReqMsg.CtrlMsg, nil) // response msg
