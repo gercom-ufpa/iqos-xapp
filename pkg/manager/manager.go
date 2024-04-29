@@ -2,7 +2,7 @@ package manager
 
 import (
 	"context"
-
+	"time"
 	"github.com/gercom-ufpa/iqos-xapp/pkg/broker"
 	"github.com/gercom-ufpa/iqos-xapp/pkg/clientv"
 	appConfig "github.com/gercom-ufpa/iqos-xapp/pkg/config"
@@ -138,11 +138,12 @@ func (mgr *Manager) start() error {
 	// starts Slice Module (TODO)
 	go mgr.SlicingManager.Run(context.Background())
 
-	err = mgr.StartClient()
-	if err != nil {
-		log.Warnf("Fail to start Client: %v", err)
-		return err
-	}
+	time.AfterFunc(30*time.Second, func() {
+		err := mgr.StartClient()
+		if err != nil {
+			log.Warnf("Falha ao iniciar o Cliente: %v", err)
+		}
+	})
 	// starts Slice Module (TODO)*/
 	return nil
 }
