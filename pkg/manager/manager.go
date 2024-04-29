@@ -2,7 +2,7 @@ package manager
 
 import (
 	"context"
-	"time"
+	// "time"
 	"github.com/gercom-ufpa/iqos-xapp/pkg/broker"
 	"github.com/gercom-ufpa/iqos-xapp/pkg/clientv"
 	appConfig "github.com/gercom-ufpa/iqos-xapp/pkg/config"
