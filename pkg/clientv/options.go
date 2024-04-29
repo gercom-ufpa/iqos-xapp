@@ -7,9 +7,9 @@ import (
 )
 
 const (
-	TLSCaCrtPath        = "/home/mth/iqos-xapp/deploys/helm-chart/iqos-chart/files/certs/tls.cacert"
-	TLSCrtPath          = "/home/mth/iqos-xapp/deploys/helm-chart/iqos-chart/files/certs/tls.crt"
-	TLSKeyPath          = "/home/mth/iqos-xapp/deploys/helm-chart/iqos-chart/files/certs/tls.key"
+	TLSCaCrtPath        = "etc/iqos-xapp/certs/tls.cacert"
+	TLSCrtPath          = "etc/iqos-xapp/certs/tls.crt"
+	TLSKeyPath          = "etc/iqos-xapp/certs/tls.key"
 	E2nodeIDConfigPath  = "/slice/e2nodeid"
 	SchedulerConfigPath = "/slice/scheduler"
 	SliceIDConfigPath   = "/slice/sliceid"
