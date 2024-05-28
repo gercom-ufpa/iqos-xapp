@@ -26,16 +26,9 @@ jobs:
       with:
         submodules: 'true'
 
-    - name: Install prerequisites
-      run: |
-        sudo apt purge swig -y
-        git clone https://github.com/swig/swig.git
-        cd swig
-        git checkout release-4.1
-        ./autogen.sh
-        ./configure --prefix=/usr/
-        make -j8
-        sudo make install
+    - uses: mmomtchev/setup-swig@v1
+      with:
+        version: release-4.1
 
     - name: Install dependencies
       run: sudo apt install -y libsctp-dev libpcre2-dev
