@@ -46,7 +46,7 @@ jobs:
 
     - name: Build
       # Build your program with the given configuration
-      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}} -DE2AP_VERSION=${{env.E2AP_VERSION}} -DKPM_VERSION=${{env.KPM_VERSION}} -DSWIG_EXECUTABLE=/usr/bin/swig
+      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}} -DE2AP_VERSION=${{env.E2AP_VERSION}} -DKPM_VERSION=${{env.KPM_VERSION}}
 
     - name: Test
       working-directory: ${{github.workspace}}/build
