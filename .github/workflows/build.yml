@@ -11,6 +11,8 @@ on:
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
+  E2AP_VERSION: E2AP_V3
+  KPM_VERSION: KPM_V3_00
 
 jobs:
   build:
@@ -25,11 +27,11 @@ jobs:
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
-      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -GNinja -DE2AP_VERSION=E2AP_V3 -DKPM_VERSION=KPM_V3_00
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DE2AP_VERSION=${{env.E2AP_VERSION}} -DKPM_VERSION={{env.KPM_VERSION}}
 
     - name: Build
       # Build your program with the given configuration
-      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}} -GNinja -DE2AP_VERSION=E2AP_V3 -DKPM_VERSION=KPM_V3_00
+      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}} -DE2AP_VERSION=${{env.E2AP_VERSION}} -DKPM_VERSION={{env.KPM_VERSION}}
 
     - name: Test
       working-directory: ${{github.workspace}}/build
