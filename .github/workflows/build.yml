@@ -28,6 +28,7 @@ jobs:
 
     - name: Install prerequisites
       run: |
+        sudo apt purge swig -y
         git clone https://github.com/swig/swig.git
         cd swig
         git checkout release-4.1
