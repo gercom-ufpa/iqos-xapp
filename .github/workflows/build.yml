@@ -34,7 +34,7 @@ jobs:
         ./autogen.sh
         ./configure --prefix=/usr/
         make -j8
-        make install
+        sudo make install
 
     - name: Install dependencies
       run: sudo apt install -y libsctp-dev libpcre2-dev
