@@ -3,11 +3,27 @@ project(iqos_xapp VERSION 0.0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 23)
 
+## Definitions
+add_compile_definitions(SPDLOG_ACTIVE_LEVEL)
+
 ## Add libs
 add_subdirectory(libs)
 
+## build external libs
+### SPDLOG for logs
+Include(FetchContent)
+FetchContent_Declare(
+        spdlog
+        GIT_REPOSITORY https://github.com/gabime/spdlog.git
+        GIT_TAG v1.14.1
+)
+FetchContent_MakeAvailable(spdlog)
+
 ## Config executable
-add_executable(iqos_xapp src/main.cpp)
+add_executable(iqos_xapp src/main.cpp
+        src/logger.cpp
+        src/logger.hpp
+)
 
 ## Link libraries
 target_include_directories(iqos_xapp PUBLIC
@@ -16,6 +32,7 @@ target_include_directories(iqos_xapp PUBLIC
 )
 target_link_libraries(iqos_xapp PUBLIC
         e42_xapp
+        spdlog::spdlog $<$<BOOL:${MINGW}>:ws2_32>
         -pthread
         -lsctp
         -ldl

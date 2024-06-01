@@ -3,13 +3,17 @@
 
 #include "../libs/flexric/src/xApp/e42_xapp_api.h"
 #include "defer.hpp"
+#include "logger.hpp"
 
 int main(int argc, char *argv[]) {
     // format args
     fr_args_t args{init_fr_args(argc, argv)};
 
+    // init logger
+    configureLogger("IQoS-xApp", spdlog::level::debug);
+
     // set FlexRIC IP (just for development)
-    args.ip = {"192.168.122.20"};
+    args.ip = {"192.168.122.10"};
 
     // init xApp
     init_xapp_api(&args);
@@ -22,14 +26,15 @@ int main(int argc, char *argv[]) {
     // free memory allocated to E2 Nodes when finished
     defer(free_e2_node_arr_xapp(&e2Nodes));
 
-    // TODO: print E2 nodes infos
-    std::cout << "There are " << static_cast<unsigned>(e2Nodes.len) << " E2 nodes connected" << '\n';
+    SPDLOG_INFO("There are {} E2 nodes connected", static_cast<unsigned>(e2Nodes.len));
+
+    // TODO: start KPM module here
 
     // wait until all xApp processes have been completed
     while (try_stop_xapp_api() == false) {
         usleep(1000); // 1 ms
     }
 
-    std::cout << "Hello, FlexRIC :)!" << '\n';
+    SPDLOG_INFO("xApp finished!");
     return EXIT_SUCCESS;
 }

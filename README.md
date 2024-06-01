@@ -4,9 +4,17 @@ Add a paragraph about the application here...
 
 ## Requirements
 
-- Near-RT RIC FlexRIC;
+- python3-dev;
+- libsctp-dev.
 
 ## Getting Started
+
+### Installing prerequisites
+
+```shell
+sudo mkdir -p /usr/local/etc/
+sudo cp -R libs/serviceModels/ /usr/local/etc/flexric
+```
 
 ### Installing the xApp
 
@@ -30,5 +38,5 @@ ninja iqos-xapp
 After building, the xApp can be run with the following command.
 
 ```shell
-./iqos-xapp -c xApp.conf
+./iqos-xapp -c ../configs/xApp.conf 
 ```
