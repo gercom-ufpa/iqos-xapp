@@ -2,7 +2,7 @@
 
 namespace KpmManager
 {
-    static constexpr u_int32_t PERIOD_MS{500}; // report period
+    static constexpr u_int32_t PERIOD_MS{1000}; // report period
     static constexpr u_int16_t KPM_RAN_FUNC_ID{2};
 
     static pthread_mutex_t mtx;
