@@ -30,7 +30,7 @@ Build the xApp.
 cd iqos-xapp
 mkdir -p build && cd build
 cmake -GNinja -DCMAKE_BUILD_TYPE=Release -DE2AP_VERSION=E2AP_V3 -DKPM_VERSION=KPM_V3_00 ..
-ninja iqos-xapp
+ninja xapp_iqos
 ```
 
 ### Running the xApp

@@ -3,7 +3,8 @@
 
 #include "../libs/flexric/src/xApp/e42_xapp_api.h"
 #include "defer.hpp"
-#include "logger.hpp"
+#include "kpmManager.hpp"
+#include "../include/logger.hpp"
 
 int main(int argc, char *argv[]) {
     // format args
@@ -29,6 +30,7 @@ int main(int argc, char *argv[]) {
     SPDLOG_INFO("There are {} E2 nodes connected", static_cast<unsigned>(e2Nodes.len));
 
     // TODO: start KPM module here
+    KpmManager::start(e2Nodes);
 
     // wait until all xApp processes have been completed
     while (try_stop_xapp_api() == false) {

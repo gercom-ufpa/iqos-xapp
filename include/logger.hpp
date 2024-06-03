@@ -7,7 +7,7 @@
 
 #include <string>
 
-#include "spdlog/spdlog.h"
+#include "../cmake-build-debug/_deps/spdlog-src/include/spdlog/spdlog.h"
 
 void configureLogger(const std::string& xAppName, spdlog::level::level_enum logLevel);
 
