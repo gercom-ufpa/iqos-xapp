@@ -46,7 +46,7 @@ jobs:
 
     - name: Build
       # Build your program with the given configuration
-      run: make -j8 -C ${{github.workspace}}/build xapp_iqos s
+      run: make -j8 -C ${{github.workspace}}/build xapp_iqos
 
     - name: Test
       working-directory: ${{github.workspace}}/build
