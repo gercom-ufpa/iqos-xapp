@@ -29,7 +29,7 @@ int main(int argc, char *argv[]) {
 
     SPDLOG_INFO("There are {} E2 nodes connected", static_cast<unsigned>(e2Nodes.len));
 
-    // TODO: start KPM module here
+    // start KPM module
     KpmManager::start(e2Nodes);
 
     // wait until all xApp processes have been completed
