@@ -23,6 +23,7 @@ FetchContent_MakeAvailable(spdlog)
 add_executable(xapp_iqos src/main.cpp
         src/logger.cpp
         src/kpmManager.cpp
+        src/e2Info.cpp
 )
 
 ## Link libraries

@@ -1,16 +1,24 @@
 #include "kpmManager.hpp"
 
+#include <iostream>
+
 namespace KpmManager
 {
     static constexpr u_int32_t PERIOD_MS{1000}; // report period
+    static constexpr u_int32_t EXP_TIME{30}; // experiment time in seconds
     static constexpr u_int16_t KPM_RAN_FUNC_ID{2};
 
     static pthread_mutex_t mtx;
 
-    // report styles (implementations below)
+    // type to filter and handle with report styles [function()]
+    using fill_kpm_act_def = kpm_act_def_t (*)(ric_report_style_item_t const* report_item);
+
+    // report styles functions (implementations below)
     static kpm_act_def_t fill_report_style_4(ric_report_style_item_t const* report_item);
 
-    static fill_kpm_act_def get_kpm_act_def[END_RIC_SERVICE_REPORT] = {
+    // select report style by idx
+    static fill_kpm_act_def get_kpm_act_def[END_RIC_SERVICE_REPORT]
+    {
         nullptr,
         nullptr,
         nullptr,
@@ -18,15 +26,108 @@ namespace KpmManager
         nullptr,
     };
 
-    // get UE id type
-    static void get_ue_id(ue_id_e2sm_e type, ue_id_e2sm_t ue_id)
+    // type to filter and handle with meas_type [function()]
+    using check_meas_type = void (*)(meas_type_t const& meas_type, meas_record_lst_t const& meas_record);
+
+    // meas type functions (implementations below)
+    static void match_meas_name_type(meas_type_t const& meas_type, meas_record_lst_t const& meas_record);
+    static void match_meas_type_id(meas_type_t const& meas_type, meas_record_lst_t const& meas_record);
+
+    // select meas_type by idx
+    static check_meas_type match_meas_type[meas_type_t::END_MEAS_TYPE]
     {
-        switch (type)
+        match_meas_name_type, // 8.3.9 in O-RAN spec
+        match_meas_type_id, // 8.3.10 in O-RAN spec
+    };
+
+    // type to filter and handle with meas_value [function()]
+    using handle_meas_value = void (*)(byte_array_t name, meas_record_lst_t meas_record);
+
+    // functions to handle meas value (implementations below)
+    static void int_meas_value(byte_array_t name, meas_record_lst_t meas_record);
+    static void real_meas_value(byte_array_t name, meas_record_lst_t meas_record);
+
+    static handle_meas_value get_meas_value[END_MEAS_VALUE]
+    {
+        int_meas_value,
+        real_meas_value,
+        nullptr, // no value
+    };
+
+    // convert a type byte_array_t to string
+    static std::string ba_to_string(byte_array_t const& byteArray)
+    {
+        return std::string{reinterpret_cast<const char*>(byteArray.buf), byteArray.len};
+    }
+
+    static void int_meas_value(byte_array_t name, meas_record_lst_t meas_record)
+    {
+        // std::unordered_map<std::string, std::function<void()>> actions;
+        std::string meas_name{ba_to_string(name)};
+
+        // match meas by name (TODO: review this)
+        if (meas_name == "RRU.PrbTotDl")
+        {
+            SPDLOG_DEBUG("DRB.PrbTotDl = {:d} [PRBs]", meas_record.int_val);
+        }
+        else if (meas_name == "RRU.PrbTotUl")
+        {
+            SPDLOG_DEBUG("DRB.PrbTotUl = {:d} [PRBs]", meas_record.int_val);
+        }
+        else if (meas_name == "DRB.PdcpSduVolumeDL")
+        {
+            SPDLOG_DEBUG("DRB.PdcpSduVolumeDL = {:d} [Mbits]", meas_record.int_val);
+        }
+        else if (meas_name == "DRB.PdcpSduVolumeUL")
+        {
+            SPDLOG_DEBUG("DRB.PdcpSduVolumeUL = {:d} [Mbits]", meas_record.int_val);
+        }
+        else if (meas_name == "DRB.RlcPacketDropRateDl") // is int??
+        {
+            SPDLOG_DEBUG("DRB.RlcPacketDropRateDl = {:d} [%]", meas_record.int_val);
+        }
+        else if (meas_name == "DRB.PacketSuccessRateUlgNBUu") // is int??
+        {
+            SPDLOG_DEBUG("DRB.PacketSuccessRateUlgNBUu = {:d} [%]", meas_record.int_val);
+        }
+        else
+        {
+            // SPDLOG_DEBUG("Measurement {} not yet supported", meas_name);
+        }
+    }
+
+    static void real_meas_value(byte_array_t name, meas_record_lst_t meas_record)
+    {
+        std::string meas_name{ba_to_string(name)};
+
+        // match meas by name
+        if (meas_name == "DRB.UEThpDl")
+        {
+            SPDLOG_DEBUG("DRB.UEThpDl = {:.2f} [Kbit/s]", meas_record.real_val);
+        }
+        else if (meas_name == "DRB.UEThpUl")
+        {
+            SPDLOG_DEBUG("DRB.UEThpUl = {:.2f} [Kbit/s]", meas_record.real_val);
+        }
+        else if (meas_name == "DRB.RlcSduDelayDl")
+        {
+            SPDLOG_DEBUG("DRB.RlcSduDelayDl = {:.2f} [μs]", meas_record.real_val);
+        }
+        else
+        {
+            // SPDLOG_DEBUG("Measurement {} not yet supported", meas_name);
+        }
+    }
+
+    // print UE id type
+    static void print_ue_id(ue_id_e2sm_e type, ue_id_e2sm_t ue_id)
+    {
+        switch (type) // define UE ID type (only 5G)
         {
         case ue_id_e2sm_e::GNB_UE_ID_E2SM:
             if (ue_id.gnb.gnb_cu_ue_f1ap_lst != nullptr)
             {
-                for (size_t i = 0; i <= ue_id.gnb.gnb_cu_ue_f1ap_lst_len; ++i)
+                for (size_t i = 0; i < ue_id.gnb.gnb_cu_ue_f1ap_lst_len; ++i)
                 {
                     // split CU
                     SPDLOG_DEBUG("UE ID type = gNB-CU | gnb_cu_ue_f1ap = {:d}", ue_id.gnb.gnb_cu_ue_f1ap_lst[i]);
@@ -56,55 +157,33 @@ namespace KpmManager
                 SPDLOG_DEBUG("ran_ue_id = {:x}", *ue_id.gnb_cu_up.ran_ue_id); // RAN UE NGAP ID
             }
             break;
-        case ue_id_e2sm_e::NG_ENB_UE_ID_E2SM:
-            if (ue_id.ng_enb.ng_enb_cu_ue_w1ap_id != nullptr)
-            {
-                // CU-DU split
-                SPDLOG_DEBUG("UE ID type = eNB-CU | ng_enb_cu_ue_w1ap_id = {:x}", *ue_id.ng_enb.ng_enb_cu_ue_w1ap_id);
-            }
-            else if (ue_id.ng_enb.ng_ran_node_ue_xnap_id != nullptr)
-            {
-                // DC setup
-                SPDLOG_DEBUG("UE ID type = eNB-NG-RAN | ng_ran_node_ue_xnap_id = {:x}",
-                             *ue_id.ng_enb.ng_ran_node_ue_xnap_id);
-            }
-            else
-            {
-                // Monolitic ID
-                SPDLOG_DEBUG("UE ID type = eNB | amf_ue_ngap_id = {:d}", ue_id.ng_enb.amf_ue_ngap_id);
-            }
+        default:
+            SPDLOG_WARN("UE ID type not supported!");
             break;
-        case ue_id_e2sm_e::NG_ENB_DU_UE_ID_E2SM:
-            // split CU-DU
-            SPDLOG_DEBUG("UE ID type = NG-eNB-DU | ng_enb_cu_ue_w1ap_id = {:d}", ue_id.ng_enb_du.ng_enb_cu_ue_w1ap_id);
-            break;
-        case ue_id_e2sm_e::EN_GNB_UE_ID_E2SM:
-            if (ue_id.en_gnb.gnb_cu_cp_ue_e1ap_lst != nullptr)
+        }
+    }
+
+    // print UE measurements
+    static void print_measurements(kpm_ind_msg_format_1_t const* msg_frm_1)
+    {
+        assert(msg_frm_1->meas_info_lst_len > 0 && "Cannot correctly print measurements");
+
+        // UE Measurements per granularity period
+        for (size_t i = 0; i < msg_frm_1->meas_data_lst_len; ++i)
+        {
+            meas_data_lst_t const data_item{msg_frm_1->meas_data_lst[i]}; // get item
+            for (int j = 0; j < data_item.meas_record_len; ++j)
             {
-                for (size_t i = 0; i <= ue_id.en_gnb.gnb_cu_cp_ue_e1ap_lst_len; ++i)
+                const meas_type_t meas_type{msg_frm_1->meas_info_lst[j].meas_type}; // item type
+                const meas_record_lst_t record_item{data_item.meas_record_lst[j]};
+
+                match_meas_type[meas_type.type](meas_type, record_item);
+
+                if (data_item.incomplete_flag && *data_item.incomplete_flag == TRUE_ENUM_VALUE)
                 {
-                    // split CU
-                    SPDLOG_DEBUG("UE ID type = eNB-CU | gnb_cu_cp_ue_e1ap = {:d}",
-                                 ue_id.en_gnb.gnb_cu_cp_ue_e1ap_lst[i]);
+                    SPDLOG_DEBUG("Measurement Record not reliable");
                 }
             }
-            else
-            {
-                // is necessary?
-                SPDLOG_DEBUG("UE ID type = eNB-X2AP | enb_ue_x2ap_id = {:d}", ue_id.en_gnb.enb_ue_x2ap_id);
-            }
-
-            if (ue_id.en_gnb.ran_ue_id != nullptr)
-            {
-                SPDLOG_DEBUG("ran_ue_id = {:x}", *ue_id.en_gnb.ran_ue_id); // RAN UE NGAP ID
-            }
-            break;
-        case ue_id_e2sm_e::ENB_UE_ID_E2SM:
-            SPDLOG_DEBUG("UE ID type = eNB | mme_ue_s1ap_id = {:d}", ue_id.enb.mme_ue_s1ap_id);
-            break;
-        default:
-            SPDLOG_WARN("UE ID type unknown!");
-            break;
         }
     }
 
@@ -227,7 +306,6 @@ namespace KpmManager
     // callback to handle return data from KPM subscription
     static void sm_cb_kpm(sm_ag_if_rd_t const* rd)
     {
-        SPDLOG_DEBUG("Receiving metrics from KPM subscription...");
         assert(rd != nullptr);
         assert(rd->type == INDICATION_MSG_AGENT_IF_ANS_V0);
         assert(rd->ind.type == KPM_STATS_V3_0);
@@ -239,15 +317,31 @@ namespace KpmManager
         kpm_ind_msg_format_3_t const* msg_frm_3{&ind->msg.frm_3}; // ind message
 
         static int counter = 1;
+
+        // create a new scope
         {
-            // create a new scope
             u_int64_t now{get_time_now_us()};
             pthread_mutex_lock(&mtx);
             defer(pthread_mutex_unlock(&mtx));
 
 
             // print latency xApp <-> E2 Node
-            SPDLOG_DEBUG("\n{:7d} KPM ind_msg latency = {:d} [μs]\n", counter, now - hdr_frm_1->collectStartTime);
+            std::cout << "\n--------------------------------------[KPM Message " << counter << " | Latency " << now -
+                hdr_frm_1->collectStartTime << " (μs)]--------------------------------------" << '\n';
+            // SPDLOG_DEBUG("KPM ind_msg latency = {:d} [μs]",);
+
+            // Reported list of measurements per UE
+            for (size_t i = 0; i < msg_frm_3->ue_meas_report_lst_len; ++i)
+            {
+                // get UE ID
+                const ue_id_e2sm_t ue_id = msg_frm_3->meas_report_per_ue[i].ue_meas_report_lst; // id
+                const ue_id_e2sm_e ue_id_type = ue_id.type; // type
+                print_ue_id(ue_id_type, ue_id);
+
+                // print measurements
+                print_measurements(&msg_frm_3->meas_report_per_ue[i].ind_msg_format_1);
+            }
+
             counter++;
         }
     }
@@ -276,6 +370,20 @@ namespace KpmManager
         act_def.frm_4.action_def_format_1 = fill_act_def_frm_1(report_item);
 
         return act_def;
+    }
+
+    // handle with meansurement name
+    static void match_meas_name_type(meas_type_t const& meas_type, meas_record_lst_t const& meas_record)
+    {
+        get_meas_value[meas_record.value](meas_type.name, meas_record);
+    }
+
+    // TODO: not implemented yet
+    static void match_meas_type_id(meas_type_t const& meas_type, meas_record_lst_t const& meas_record)
+    {
+        (void)meas_type;
+        (void)meas_record;
+        assert(false && "ID Measurement Type not yet supported");
     }
 
     static kpm_sub_data_t gen_kpm_subs(kpm_ran_function_def_t const* ran_func)
@@ -334,14 +442,14 @@ namespace KpmManager
                 // use API to send subscription
                 hndl[i] = {report_sm_xapp_api(&e2Node->id, KPM_RAN_FUNC_ID, &kpm_sub, sm_cb_kpm)};
                 assert(hndl[i].success == true);
-
                 free_kpm_sub_data(&kpm_sub);
             }
         }
 
-        sleep(10);
+        // time to received metrics
+        sleep(EXP_TIME);
 
-        for (int i = 0; i < e2Nodes.len; ++i)
+        for (size_t i = 0; i < e2Nodes.len; ++i)
         {
             // Remove the handle previously returned
             if (hndl[i].success == true)

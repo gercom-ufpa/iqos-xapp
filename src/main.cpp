@@ -1,10 +1,13 @@
 #include <iostream>
 #include <unistd.h>
+#include <db/db.h>
+#include <db/sqlite3/sqlite3_wrapper.h>
 
 #include "../libs/flexric/src/xApp/e42_xapp_api.h"
 #include "defer.hpp"
+#include "e2Info.hpp"
 #include "kpmManager.hpp"
-#include "../include/logger.hpp"
+#include "logger.hpp"
 
 int main(int argc, char *argv[]) {
     // format args
@@ -27,10 +30,19 @@ int main(int argc, char *argv[]) {
     // free memory allocated to E2 Nodes when finished
     defer(free_e2_node_arr_xapp(&e2Nodes));
 
-    SPDLOG_INFO("There are {} E2 nodes connected", static_cast<unsigned>(e2Nodes.len));
+    // setup db
+    // db_xapp_t db {};
+    // for (size_t i = 0; i < e2Nodes.len; ++i)
+    // {
+    //     write_db_sqlite3(db.handler, e2Nodes.n[i].id, )
+    // }
+
+    // E2 nodes info
+    e2Info::printE2Nodes(e2Nodes);
 
     // start KPM module
-    KpmManager::start(e2Nodes);
+    // KpmManager::start(e2Nodes);
+
 
     // wait until all xApp processes have been completed
     while (try_stop_xapp_api() == false) {
