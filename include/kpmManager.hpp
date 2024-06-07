@@ -7,9 +7,12 @@
 
 #include "chrono"
 #include <cassert>
+#include <iostream>
 
 namespace KpmManager
 {
+    static constexpr u_int32_t EXP_TIME{120}; // experiment time in seconds
+
     // used to check message latency
     u_int64_t get_time_now_us();
 

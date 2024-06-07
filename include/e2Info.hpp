@@ -11,7 +11,10 @@
 namespace e2Info
 {
     // print E2 nodes informations
-    void printE2Nodes(const e2_node_arr_xapp_t &e2Nodes);
+    void printE2Nodes(const e2_node_arr_xapp_t& e2Nodes);
+
+    // TODO
+    // global_e2_node_id_t getE2NodesIDs(e2_node_arr_xapp_t& e2Nodes);
 }
 
 

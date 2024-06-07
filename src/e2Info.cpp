@@ -2,6 +2,9 @@
 
 namespace e2Info
 {
+
+    using e2NodesIdLst = std::array<global_e2_node_id_t, 2>;
+
     void printE2Nodes(const e2_node_arr_xapp_t& e2Nodes)
     {
         SPDLOG_INFO("There are {} E2 nodes connected", static_cast<unsigned>(e2Nodes.len));
@@ -28,4 +31,14 @@ namespace e2Info
             }
         }
     }
+
+    // TODO
+    // e2NodesIdLst getE2NodesIDs(e2_node_arr_xapp_t &e2Nodes)
+    // {
+    //     e2NodesIdLst ids {};
+    //     for (size_t i = 0; i < e2Nodes.len; ++i)
+    //     {
+    //         e2Nodes.n[i].id;
+    //     }
+    // }
 }

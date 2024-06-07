@@ -1,7 +1,5 @@
 #include <iostream>
 #include <unistd.h>
-#include <db/db.h>
-#include <db/sqlite3/sqlite3_wrapper.h>
 
 #include "../libs/flexric/src/xApp/e42_xapp_api.h"
 #include "defer.hpp"
@@ -17,7 +15,7 @@ int main(int argc, char *argv[]) {
     configureLogger("IQoS-xApp", spdlog::level::debug);
 
     // set FlexRIC IP (just for development)
-    args.ip = {"192.168.122.10"};
+    args.ip = {"10.126.1.102"};
 
     // init xApp
     init_xapp_api(&args);
@@ -30,18 +28,11 @@ int main(int argc, char *argv[]) {
     // free memory allocated to E2 Nodes when finished
     defer(free_e2_node_arr_xapp(&e2Nodes));
 
-    // setup db
-    // db_xapp_t db {};
-    // for (size_t i = 0; i < e2Nodes.len; ++i)
-    // {
-    //     write_db_sqlite3(db.handler, e2Nodes.n[i].id, )
-    // }
-
     // E2 nodes info
     e2Info::printE2Nodes(e2Nodes);
 
     // start KPM module
-    // KpmManager::start(e2Nodes);
+    KpmManager::start(e2Nodes);
 
 
     // wait until all xApp processes have been completed

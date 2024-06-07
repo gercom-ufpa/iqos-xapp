@@ -1,11 +1,8 @@
 #include "kpmManager.hpp"
 
-#include <iostream>
-
 namespace KpmManager
 {
     static constexpr u_int32_t PERIOD_MS{1000}; // report period
-    static constexpr u_int32_t EXP_TIME{30}; // experiment time in seconds
     static constexpr u_int16_t KPM_RAN_FUNC_ID{2};
 
     static pthread_mutex_t mtx;
@@ -309,6 +306,13 @@ namespace KpmManager
         assert(rd != nullptr);
         assert(rd->type == INDICATION_MSG_AGENT_IF_ANS_V0);
         assert(rd->ind.type == KPM_STATS_V3_0);
+
+        // TODO: setup db
+        // db_xapp_t db {};
+        // for (size_t i = 0; i < e2Nodes.len; ++i)
+        // {
+        //     write_db_sqlite3(db.handler, e2Nodes.n[i].id, rd);
+        // }
 
         // Reading Indication Message Format 3
         // 8.2.1.4.3 in the O-RAN specification
