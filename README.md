@@ -5,7 +5,8 @@ Add a paragraph about the application here...
 ## Requirements
 
 - python3-dev;
-- libsctp-dev.
+- libsctp-dev;
+- GLIBCXX_3.4.32.
 
 ## Getting Started
 

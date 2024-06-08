@@ -2,9 +2,6 @@
 
 namespace KpmManager
 {
-    static constexpr u_int32_t PERIOD_MS{1000}; // report period
-    static constexpr u_int16_t KPM_RAN_FUNC_ID{2};
-
     static pthread_mutex_t mtx;
 
     // type to filter and handle with report styles [function()]
@@ -89,7 +86,7 @@ namespace KpmManager
         }
         else
         {
-            // SPDLOG_DEBUG("Measurement {} not yet supported", meas_name);
+            SPDLOG_DEBUG("Measurement {} not yet supported", meas_name);
         }
     }
 
@@ -100,11 +97,11 @@ namespace KpmManager
         // match meas by name
         if (meas_name == "DRB.UEThpDl")
         {
-            SPDLOG_DEBUG("DRB.UEThpDl = {:.2f} [Kbit/s]", meas_record.real_val);
+            SPDLOG_DEBUG("DRB.UEThpDl = {:.2f} [Mbps]", meas_record.real_val/1000);
         }
         else if (meas_name == "DRB.UEThpUl")
         {
-            SPDLOG_DEBUG("DRB.UEThpUl = {:.2f} [Kbit/s]", meas_record.real_val);
+            SPDLOG_DEBUG("DRB.UEThpUl = {:.2f} [Mbps]", meas_record.real_val/1000);
         }
         else if (meas_name == "DRB.RlcSduDelayDl")
         {
@@ -112,7 +109,7 @@ namespace KpmManager
         }
         else
         {
-            // SPDLOG_DEBUG("Measurement {} not yet supported", meas_name);
+            SPDLOG_DEBUG("Measurement {} not yet supported", meas_name);
         }
     }
 
@@ -321,17 +318,16 @@ namespace KpmManager
         kpm_ind_msg_format_3_t const* msg_frm_3{&ind->msg.frm_3}; // ind message
 
         static int counter = 1;
+        u_int64_t now{get_time_now_us()};
 
         // create a new scope
         {
-            u_int64_t now{get_time_now_us()};
             pthread_mutex_lock(&mtx);
             defer(pthread_mutex_unlock(&mtx));
 
-
             // print latency xApp <-> E2 Node
-            std::cout << "\n--------------------------------------[KPM Message " << counter << " | Latency " << now -
-                hdr_frm_1->collectStartTime << " (μs)]--------------------------------------" << '\n';
+            printf("\n <--------------KPM ind_msg %d | latency = %ld [μs] --------------> \n", counter, now - hdr_frm_1->collectStartTime); // xApp <-> E2 Node
+
             // SPDLOG_DEBUG("KPM ind_msg latency = {:d} [μs]",);
 
             // Reported list of measurements per UE
