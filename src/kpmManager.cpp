@@ -94,6 +94,7 @@ namespace KpmManager
     {
         std::string meas_name{ba_to_string(name)};
 
+        // TODO: review this
         // match meas by name
         if (meas_name == "DRB.UEThpDl")
         {
@@ -326,7 +327,8 @@ namespace KpmManager
             defer(pthread_mutex_unlock(&mtx));
 
             // print latency xApp <-> E2 Node
-            printf("\n <--------------KPM ind_msg %d | latency = %ld [μs] --------------> \n", counter, now - hdr_frm_1->collectStartTime); // xApp <-> E2 Node
+            printf("\n <--------------KPM ind_msg %d | latency = %ld [μs] --------------> \n", counter,
+                   now - hdr_frm_1->collectStartTime); // xApp <-> E2 Node
 
             // SPDLOG_DEBUG("KPM ind_msg latency = {:d} [μs]",);
 

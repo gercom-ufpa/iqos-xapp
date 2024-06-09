@@ -15,7 +15,7 @@ int main(int argc, char *argv[]) {
     configureLogger("IQoS-xApp", spdlog::level::debug);
 
     // set FlexRIC IP (just for development)
-    args.ip = {"192.168.122.10"};
+    // args.ip = {"10.126.1.102"};
 
     // init xApp
     init_xapp_api(&args);

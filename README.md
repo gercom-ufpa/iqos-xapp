@@ -6,6 +6,8 @@ Add a paragraph about the application here...
 
 - python3-dev;
 - libsctp-dev;
+- ninja-build;
+- swig v4.1 or newer;
 
 ## Getting Started
 
@@ -21,7 +23,7 @@ Copy service models libraries to system.
 
 ```shell
 sudo mkdir -p /usr/local/etc/
-sudo cp -R libs/serviceModels /usr/local/etc/flexric
+sudo cp -R libs/serviceModels /usr/lib/flexric
 ```
 
 Build the xApp.

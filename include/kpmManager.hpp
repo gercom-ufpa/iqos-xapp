@@ -11,7 +11,7 @@
 
 namespace KpmManager
 {
-    constexpr u_int32_t EXP_TIME{120}; // experiment time in seconds
+    constexpr u_int32_t EXP_TIME{60}; // experiment time in seconds
     constexpr u_int32_t PERIOD_MS{1000}; // report period
     constexpr u_int16_t KPM_RAN_FUNC_ID{2};
 
