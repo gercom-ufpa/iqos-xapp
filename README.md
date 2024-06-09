@@ -6,23 +6,22 @@ Add a paragraph about the application here...
 
 - python3-dev;
 - libsctp-dev;
-- GLIBCXX_3.4.32.
 
 ## Getting Started
 
-### Installing prerequisites
-
-```shell
-sudo mkdir -p /usr/local/etc/
-sudo cp -R libs/serviceModels/ /usr/local/etc/flexric
-```
-
 ### Installing the xApp
 
-After installing FlexRIC, clone the xApp repository with the following command.
+Clone the xApp repository with the following command.
 
 ```shell
 git clone --recurse-submodules -j8 git@github.com:gercom-ufpa/iqos-xapp.git
+```
+
+Copy service models libraries to system.
+
+```shell
+sudo mkdir -p /usr/local/etc/
+sudo cp -R libs/serviceModels /usr/local/etc/flexric
 ```
 
 Build the xApp.
@@ -39,5 +38,5 @@ ninja xapp_iqos
 After building, the xApp can be run with the following command.
 
 ```shell
-./iqos-xapp -c ../configs/xApp.conf 
+./xapp_iqos -c ../configs/xApp.conf 
 ```

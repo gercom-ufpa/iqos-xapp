@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.15)
 project(xapp_iqos VERSION 0.0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_C_FLAGS_RELEASE "-O3")
+set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
 ## Definitions
 add_compile_definitions(SPDLOG_ACTIVE_LEVEL)
