@@ -319,7 +319,7 @@ namespace KpmManager
         kpm_ind_msg_format_3_t const* msg_frm_3{&ind->msg.frm_3}; // ind message
 
         static int counter = 1;
-        uint64_t now{get_time_now_us()};
+        const u_int64_t now{get_time_now_us()};
 
         // create a new scope
         {
