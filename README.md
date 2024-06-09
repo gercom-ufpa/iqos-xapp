@@ -23,7 +23,7 @@ Copy service models libraries to system.
 
 ```shell
 sudo mkdir -p /usr/local/etc/
-sudo cp -R libs/serviceModels /usr/lib/flexric
+sudo cp -R libs/serviceModels /usr/local/lib/flexric
 ```
 
 Build the xApp.
