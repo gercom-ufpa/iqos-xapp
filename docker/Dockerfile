@@ -33,7 +33,10 @@ COPY out/bin/xapp_iqos /usr/local/bin/xapp_iqos
 
 ## Copy Config file
 COPY configs/xApp.conf /usr/local/etc/flexric/flexric.conf
-# RUN sed -i "s/NEAR_RIC_IP = 127.0.0.1/NEAR_RIC_IP = ${NEAR_RIC_IP}/g" /usr/local/etc/flexric/flexric.conf
+
+## Copy initialization script
+COPY scripts/run.sh /run.sh
+RUN chmod +x /run.sh
 
 RUN ldconfig && \
     echo "--- Check shared objects dependencies for executable nearRT-RIC ---" && \
@@ -53,4 +56,4 @@ LABEL br.ufpa.gercom.image.title="IQoS-xApp" \
 ## E42 -- xApp
 EXPOSE 36422/sctp
 
-CMD ["stdbuf", "-o0", "xapp_iqos"]
+ENTRYPOINT ["/run.sh"]
