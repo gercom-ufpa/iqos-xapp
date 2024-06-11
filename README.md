@@ -11,7 +11,13 @@ Add a paragraph about the application here...
 
 ## Getting Started
 
-### Installing the xApp
+## Using Docker image
+
+```shell
+docker container run -itd --name iqos-xapp -e NEAR_RIC_IP="<NEAR_RIC_IP>" muriloavlis/iqos-xapp:latest
+```
+
+### Building the xApp
 
 Clone the xApp repository with the following command.
 

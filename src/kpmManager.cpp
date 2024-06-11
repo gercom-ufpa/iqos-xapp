@@ -320,8 +320,7 @@ namespace KpmManager
         kpm_ind_msg_format_3_t const* msg_frm_3{&ind->msg.frm_3}; // ind message
 
         static int counter = 1;
-        u_int64_t now{get_time_now_us()};
-        u_int64_t latency{now - hdr_frm_1->collectStartTime};
+        u_int64_t latency{get_time_now_us() - hdr_frm_1->collectStartTime};
 
         // create a new scope
         {
