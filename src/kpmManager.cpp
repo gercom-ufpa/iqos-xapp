@@ -321,6 +321,7 @@ namespace KpmManager
 
         static int counter = 1;
         u_int64_t now{get_time_now_us()};
+        u_int64_t latency{now - hdr_frm_1->collectStartTime};
 
         // create a new scope
         {
@@ -328,7 +329,6 @@ namespace KpmManager
             defer(pthread_mutex_unlock(&mtx));
 
             // print latency xApp <-> E2 Node
-            u_int64_t latency{now - hdr_frm_1->collectStartTime};
             printf("\n <--------------KPM ind_msg %d | latency = %lu [μs]--------------> \n", counter,
                    latency); // xApp <-> E2 Node
 
