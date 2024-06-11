@@ -59,7 +59,7 @@ jobs:
                 libpdcp_sm.so \
                 libgtp_sm.so \
                 libtc_sm.so \
-                librlc_sm.so \
+                librlc_sm.so
 
       - name: Test
         working-directory: ${{github.workspace}}/build
