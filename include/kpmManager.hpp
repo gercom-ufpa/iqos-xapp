@@ -8,6 +8,7 @@
 #include "chrono"
 #include <cassert>
 #include <iostream>
+#include <cstdlib>
 
 namespace KpmManager
 {

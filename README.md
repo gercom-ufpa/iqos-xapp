@@ -4,10 +4,13 @@ Add a paragraph about the application here...
 
 ## Requirements
 
-- python3-dev;
-- libsctp-dev;
-- ninja-build;
-- swig v4.1 or newer;
+[//]: # (- python3-dev;)
+[//]: # (- libsctp-dev;)
+[//]: # (- ninja-build;)
+[//]: # (- swig v4.1 or newer;)
+
+- Ubuntu Server 24.04 LTS;
+- FlexRIC (available in: https://gitlab.eurecom.fr/mosaic5g/flexric)
 
 ## Getting Started
 
@@ -22,6 +25,7 @@ git clone --recurse-submodules -j8 git@github.com:gercom-ufpa/iqos-xapp.git
 Copy service models libraries to system.
 
 ```shell
+cd iqos-xapp
 sudo mkdir -p /usr/local/etc/
 sudo cp -R libs/serviceModels /usr/local/lib/flexric
 ```
@@ -29,7 +33,6 @@ sudo cp -R libs/serviceModels /usr/local/lib/flexric
 Build the xApp.
 
 ```shell
-cd iqos-xapp
 mkdir -p build && cd build
 cmake -GNinja -DCMAKE_BUILD_TYPE=Release -DE2AP_VERSION=E2AP_V3 -DKPM_VERSION=KPM_V3_00 ..
 ninja xapp_iqos

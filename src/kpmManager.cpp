@@ -293,9 +293,10 @@ namespace KpmManager
 
     u_int64_t get_time_now_us()
     {
-        auto now{std::chrono::high_resolution_clock::now()};
-        auto duration{std::chrono::duration_cast<std::chrono::microseconds>(now.time_since_epoch())};
-        return duration.count();
+        auto now = std::chrono::duration_cast<std::chrono::microseconds>(
+            std::chrono::system_clock::now().time_since_epoch()
+        );
+        return now.count();
     }
 
     // callback to handle return data from KPM subscription
@@ -319,7 +320,6 @@ namespace KpmManager
         kpm_ind_msg_format_3_t const* msg_frm_3{&ind->msg.frm_3}; // ind message
 
         static int counter = 1;
-        const u_int64_t now{get_time_now_us()};
 
         // create a new scope
         {
@@ -327,8 +327,9 @@ namespace KpmManager
             defer(pthread_mutex_unlock(&mtx));
 
             // print latency xApp <-> E2 Node
-            printf("\n <--------------KPM ind_msg %d | latency = %ld [μs] --------------> \n", counter,
-                   now - hdr_frm_1->collectStartTime); // xApp <-> E2 Node
+            u_int64_t latency{get_time_now_us() - hdr_frm_1->collectStartTime};
+            printf("\n <--------------KPM ind_msg %d | latency = %lu [μs] --------------> \n", counter,
+                   latency); // xApp <-> E2 Node
 
             // SPDLOG_DEBUG("KPM ind_msg latency = {:d} [μs]",);
 
