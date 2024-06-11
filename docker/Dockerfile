@@ -33,7 +33,7 @@ COPY out/bin/xapp_iqos /usr/local/bin/xapp_iqos
 
 ## Copy Config file
 COPY configs/xApp.conf /usr/local/etc/flexric/flexric.conf
-RUN sed -i "s/NEAR_RIC_IP = 127.0.0.1/NEAR_RIC_IP = ${NEAR_RIC_IP}/g" /usr/local/etc/flexric/flexric.conf
+# RUN sed -i "s/NEAR_RIC_IP = 127.0.0.1/NEAR_RIC_IP = ${NEAR_RIC_IP}/g" /usr/local/etc/flexric/flexric.conf
 
 RUN ldconfig && \
     echo "--- Check shared objects dependencies for executable nearRT-RIC ---" && \
