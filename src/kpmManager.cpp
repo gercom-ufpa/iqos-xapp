@@ -329,7 +329,7 @@ namespace KpmManager
 
             // print latency xApp <-> E2 Node
             u_int64_t latency{now - hdr_frm_1->collectStartTime};
-            printf("\n <--------------KPM ind_msg %d | latency = %lu [μs] --------------> \n", counter,
+            printf("\n <--------------KPM ind_msg %d | latency = %lu [μs]--------------> \n", counter,
                    latency); // xApp <-> E2 Node
 
             // SPDLOG_DEBUG("KPM ind_msg latency = {:d} [μs]",);

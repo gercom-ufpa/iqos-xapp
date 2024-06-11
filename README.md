@@ -4,13 +4,10 @@ Add a paragraph about the application here...
 
 ## Requirements
 
-[//]: # (- python3-dev;)
-[//]: # (- libsctp-dev;)
-[//]: # (- ninja-build;)
-[//]: # (- swig v4.1 or newer;)
-
-- Ubuntu Server 24.04 LTS;
-- FlexRIC (available in: https://gitlab.eurecom.fr/mosaic5g/flexric)
+- python3-dev;
+- libsctp-dev;
+- ninja-build;
+- swig v4.1 or newer;
 
 ## Getting Started
 
