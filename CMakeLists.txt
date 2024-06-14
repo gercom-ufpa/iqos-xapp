@@ -31,6 +31,7 @@ add_executable(xapp_iqos src/main.cpp
 ## Link libraries
 target_include_directories(xapp_iqos PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/include
+        ${CMAKE_CURRENT_SOURCE_DIR}/libs
         ${CMAKE_CURRENT_SOURCE_DIR}/libs/flexric/src/xApp
 )
 target_link_libraries(xapp_iqos PUBLIC

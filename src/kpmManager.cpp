@@ -306,13 +306,6 @@ namespace KpmManager
         assert(rd->type == INDICATION_MSG_AGENT_IF_ANS_V0);
         assert(rd->ind.type == KPM_STATS_V3_0);
 
-        // TODO: setup db
-        // db_xapp_t db {};
-        // for (size_t i = 0; i < e2Nodes.len; ++i)
-        // {
-        //     write_db_sqlite3(db.handler, e2Nodes.n[i].id, rd);
-        // }
-
         // Reading Indication Message Format 3
         // 8.2.1.4.3 in the O-RAN specification
         kpm_ind_data_t const* ind{&rd->ind.kpm.ind}; // indication
