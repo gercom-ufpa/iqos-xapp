@@ -56,33 +56,17 @@ namespace KpmManager
 
     static void int_meas_value(byte_array_t name, meas_record_lst_t meas_record)
     {
-        // std::unordered_map<std::string, std::function<void()>> actions;
+        // get meas name on string type
         std::string meas_name{ba_to_string(name)};
 
-        // match meas by name (TODO: review this)
-        if (meas_name == "RRU.PrbTotDl")
+        auto it = std::ranges::find(
+            SUPPORTED_MEASUREMENTS.begin(),
+            SUPPORTED_MEASUREMENTS.end(),
+            meas_name);
+
+        if (it != SUPPORTED_MEASUREMENTS.end())
         {
-            SPDLOG_DEBUG("DRB.PrbTotDl = {:d} [PRBs]", meas_record.int_val);
-        }
-        else if (meas_name == "RRU.PrbTotUl")
-        {
-            SPDLOG_DEBUG("DRB.PrbTotUl = {:d} [PRBs]", meas_record.int_val);
-        }
-        else if (meas_name == "DRB.PdcpSduVolumeDL")
-        {
-            SPDLOG_DEBUG("DRB.PdcpSduVolumeDL = {:d} [Mbits]", meas_record.int_val);
-        }
-        else if (meas_name == "DRB.PdcpSduVolumeUL")
-        {
-            SPDLOG_DEBUG("DRB.PdcpSduVolumeUL = {:d} [Mbits]", meas_record.int_val);
-        }
-        else if (meas_name == "DRB.RlcPacketDropRateDl") // is int??
-        {
-            SPDLOG_DEBUG("DRB.RlcPacketDropRateDl = {:d} [%]", meas_record.int_val);
-        }
-        else if (meas_name == "DRB.PacketSuccessRateUlgNBUu") // is int??
-        {
-            SPDLOG_DEBUG("DRB.PacketSuccessRateUlgNBUu = {:d} [%]", meas_record.int_val);
+            SPDLOG_DEBUG("{}: {:d}", meas_name, meas_record.int_val);
         }
         else
         {

@@ -10,10 +10,10 @@
 - **RIC Style Type 2**: Used to carry measurement report for a single UE of interest from a target E2 Node. (not implemented)
 
 
-- **RIC Style Type 3**: Used to carry UE-level measurement report for a group of UEs per measurement type matching subscribed conditions from a target E2 Node. (:x:)
+- **RIC Style Type 3**: Used to carry UE-level measurement report for a group of UEs per measurement type matching subscribed conditions from a target E2 Node. (not implemented)
 
 
-- **RIC Style Type 4**: Used to carry measurement report for a group of UEs across a set of measurement types satisfying common subscribed conditions from a target E2 Node. (:white_check_mark:)
+- **RIC Style Type 4**: Used to carry measurement report for a group of UEs across a set of measurement types satisfying common subscribed conditions from a target E2 Node. (implemented)
 
 
 - **RIC Style Type 5**: Used to carry measurement report for multiple UE of interest from a target E2 Node (not implemented).

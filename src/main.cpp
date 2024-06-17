@@ -6,6 +6,7 @@
 #include "e2Info.hpp"
 #include "kpmManager.hpp"
 #include "logger.hpp"
+#include "kafka/producer.hpp"
 
 int main(int argc, char* argv[])
 {
@@ -16,7 +17,7 @@ int main(int argc, char* argv[])
     configureLogger("IQoS-xApp", spdlog::level::debug);
 
     // set FlexRIC IP (just for development)
-    // args.ip = {"192.168.122.10"};
+    args.ip = {"192.168.122.10"};
 
     // init xApp
     init_xapp_api(&args);
@@ -29,9 +30,20 @@ int main(int argc, char* argv[])
     // free memory allocated to E2 Nodes when finished
     defer(free_e2_node_arr_xapp(&e2Nodes));
 
+    // setup kafka
+    KafkaProducer::kconfig cfg = {
+        {"bootstrap.servers", "kafka-0:9092,kafka-1:9092"},
+        {"acks", "1"},
+    };
+
+    KafkaProducer::set_config(cfg);
+
+    KafkaProducer::send_msg("testmsg", "testtopic");
+
+
     // E2Info module
-    auto e2Info {E2Info(e2Nodes)};
-    e2Info.printE2Nodes();
+    // auto e2Info {E2Info(e2Nodes)};
+    // e2Info.printE2Nodes();
 
     // KPM module
     // KpmManager::start(e2Nodes);

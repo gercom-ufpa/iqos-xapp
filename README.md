@@ -6,6 +6,7 @@ Add a paragraph about the application here...
 
 - python3-dev;
 - libsctp-dev;
+- librdkafka-dev;
 - ninja-build;
 - swig v4.1 or newer;
 
