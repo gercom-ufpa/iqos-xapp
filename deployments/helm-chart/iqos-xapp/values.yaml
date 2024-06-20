@@ -1,0 +1,121 @@
+################################################################################
+#   Copyright (c) 2019 AT&T Intellectual Property.                             #
+#                                                                              #
+#   Licensed under the Apache License, Version 2.0 (the "License");            #
+#   you may not use this file except in compliance with the License.           #
+#   You may obtain a copy of the License at                                    #
+#                                                                              #
+#       http://www.apache.org/licenses/LICENSE-2.0                             #
+#                                                                              #
+#   Unless required by applicable law or agreed to in writing, software        #
+#   distributed under the License is distributed on an "AS IS" BASIS,          #
+#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   #
+#   See the License for the specific language governing permissions and        #
+#   limitations under the License.                                             #
+################################################################################'
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+ricplt:
+# This section is reserved for values imported from RIC Platform charts
+  dbaasService: "service-ricplt-dbaas-tcp.ricplt.svc.cluster.local"
+  metricsdbService: "service-metricsdb.ricplt.svc.cluster.local"
+  pltIngressUrl: "ricplt-entry"
+  xappIngressUrl: "ricxapp-entry"
+
+  appmgrRMRService: "service-ricplt-appmgr-rmr.ricplt.svc.cluster.local"
+  e2mgrRMRService: "service-ricplt-e2mgr-rmr.ricplt.svc.cluster.local"
+  e2termRMRService: "service-ricplt-e2term-rmr.ricplt.svc.cluster.local"
+  rtmgrRMRService: "service-ricplt-rtmgr-rmr.ricplt.svc.cluster.local"
+  a1mediatorRMRService: "service-ricplt-a1mediator-rmr.ricplt.svc.cluster.local"
+
+# Location of the xApp config files injected from the xApp descriptor
+appconfig:
+    path: /opt/ric/config
+
+# Location of volume based on HostPath of type Directory
+storage:
+    mountPath: /home/kpm/storage
+
+# Number of replica
+replicaCount: 1
+
+# Image pulling policy
+image_pull_policy: IfNotPresent
+
+# Environment variables that will be injected
+appenv: {}
+
+# Liveness probe definition. If empty, liveness probe will be disabled
+livenessProbe: {}
+
+# Readiness probe definition. If empty, readiness probe will be disabled
+readinessProbe: {}
+
+# Instance name. If empty, chart name will be used
+name: {}
+
+# Full instance name. If empty, full name will be constructed from name
+fullname: {}
+
+###############    The following are from the xApp descriptor     ###############
+containers:
+- command:
+  - iqos_xapp
+  image:
+    name: muriloavlis/iqos-xapp
+    registry: hub.docker.com
+    tag: osc-dev
+  name: iqos-xapp
+controls:
+  active: true
+  debug_mode: 'true'
+  interfaceId:
+    globalENBId:
+      eNBId: 5678
+      plmnId: 123456
+  local:
+    host: :8080
+  logger:
+    level: 3
+  measurement_interval: 10000
+  simulator_mode: 'true'
+  ves_collector_address: iqos-xapp.gercom.ufpa.br:8888
+livenessProbe:
+  exec:
+    command:
+    - /usr/local/bin/health_ck
+  initialDelaySeconds: 5
+  periodSeconds: 15
+messaging:
+  ports:
+  - container: iqos-xapp
+    description: http service
+    name: http
+    port: 8080
+  - container: iqos-xapp
+    description: rmr data port for iqos-xapp
+    name: rmr-data
+    policies:
+    - 1
+    - 2
+    port: 4560
+    rxMessages:
+    - RIC_SUB_RESP
+    - RIC_SUB_FAILURE
+    - RIC_SUB_DEL_RESP
+    - RIC_INDICATION
+    txMessages:
+    - RIC_SUB_REQ
+    - RIC_SUB_DEL_REQ
+  - container: iqos-xapp
+    description: rmr route port for iqos-xapp
+    name: rmr-route
+    port: 4561
+readinessProbe:
+  httpGet:
+    path: ric/v1/health/alive
+    port: 8080
+  initialDelaySeconds: 5
+  periodSeconds: 15
+version: 0.0.1
+xapp_name: iqos-xapp
