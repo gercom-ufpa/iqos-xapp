@@ -1,3 +1,0 @@
-[submodule "submodules/xapp-frame"]
-	path = submodules/xapp-frame
-	url = https://gerrit.o-ran-sc.org/r/ric-plt/xapp-frame

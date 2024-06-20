@@ -1,0 +1,1 @@
+ricxappframe==3.2.2

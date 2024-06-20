@@ -4,7 +4,7 @@ OSC Near-RT development branch
 
 ## Requirements
 
-- TODO;
+- ricxappframe (from pypi);
 
 ## Getting Started
 
