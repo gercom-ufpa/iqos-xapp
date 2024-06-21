@@ -4,7 +4,8 @@ OSC Near-RT development branch
 
 ## Requirements
 
-- ricxappframe (from pypi);
+- rmr (on deps or [ric-plt-lib-rmr](https://gerrit.o-ran-sc.org/r/ric-plt/lib/rmr));
+- poetry;
 
 ## Getting Started
 

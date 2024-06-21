@@ -1,0 +1,33 @@
+[tool.poetry]
+name = "iqos-xapp"
+version = "0.0.1"
+description = "xApp for QoS management in O-RAN network contexts"
+authors = [
+    "Murilo Silva <murilosilva@itec.ufpa.br>"
+]
+maintainers = [
+    "Murilo Silva <murilosilva@itec.ufpa.br>"
+]
+readme = "README.md"
+repository = "https://github.com/gercom-ufpa/iqos-xapp"
+keywords = ["o-ran", "xApp", "QoS", "5G", "network"]
+classifiers=[
+        "Development Status :: 3 - Alpha",
+        "Intended Audience :: RNP",
+        "Topic :: Software Development :: Network Application",
+        "Topic :: Software Development :: O-RAN",
+        "Topic :: Software Development :: 5G Networks",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3 :: Only"
+]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+ricxappframe = "^3.2.2"
+
+[tool.poetry.scripts]
+run = "src.main:main"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

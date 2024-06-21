@@ -1,2 +1,11 @@
+from ricxappframe.xapp_frame import Xapp
+import logger
+
+
 def main():
-    print("Test python iqos-xapp project")
+    log = logger.get_logger()
+    log.debug("test")
+
+
+if __name__ == "__main__":
+    main()
