@@ -426,8 +426,8 @@ namespace KpmManager
             }
         }
 
-        // time to received metrics
-        sleep(EXP_TIME);
+        // time to received metrics in seconds
+        std::this_thread::sleep_for(std::chrono::seconds(EXP_TIME));
 
         for (size_t i = 0; i < e2Nodes.len; ++i)
         {

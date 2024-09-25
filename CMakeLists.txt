@@ -26,7 +26,6 @@ add_executable(xapp_iqos src/main.cpp
         src/logger.cpp
         src/kpmManager.cpp
         src/e2Info.cpp
-        src/kafka/producer.cpp
 )
 
 ## Link libraries
@@ -38,7 +37,6 @@ target_include_directories(xapp_iqos PUBLIC
 target_link_libraries(xapp_iqos PUBLIC
         e42_xapp
         spdlog::spdlog $<$<BOOL:${MINGW}>:ws2_32>
-        -lrdkafka++
         -pthread
         -lsctp
         -ldl
