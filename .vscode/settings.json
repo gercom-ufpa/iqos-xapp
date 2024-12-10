@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "assert.h": "c",
+        "runprediction_initialize.h": "c",
+        "elementwiseoperationinplace.h": "c"
+    }
+}
